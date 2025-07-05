@@ -43,9 +43,9 @@ const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h2 className="heading-lg mb-2">Welcome Back</h2>
+          <h2 className="heading-lg mb-2">Bem-vindo de volta</h2>
           <p className="text-brown-600 font-light">
-            Sign in to continue your mood journey
+            Acesse sua conta para registrar como você se sente hoje
           </p>
         </div>
 
@@ -53,28 +53,28 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
-                Email Address
+                Endereço de e-mail
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-5 w-5 text-brown-400" />
+                <Mail className="absolute left-3 top-3 h-5 w-5 text-brown-400 pointer-events-none" />
                 <Input
                   type="email"
                   name="email"
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="pl-10"
-                  placeholder="Enter your email"
+                  className="pl-10" // padding para não sobrepor o ícone
+                  placeholder="Digite seu e-mail"
                 />
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
-                Password
+                Senha
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-5 w-5 text-brown-400" />
+                <Lock className="absolute left-3 top-3 h-5 w-5 text-brown-400 pointer-events-none" />
                 <Input
                   type={showPassword ? "text" : "password"}
                   name="password"
@@ -82,7 +82,7 @@ const LoginPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="pl-10 pr-10"
-                  placeholder="Enter your password"
+                  placeholder="Digite sua senha"
                 />
                 <button
                   type="button"
@@ -94,44 +94,26 @@ const LoginPage = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 text-brown-600 border-brown-300 rounded focus:ring-brown-500"
-                />
-                <label className="ml-2 block text-sm text-brown-700">
-                  Remember me
-                </label>
-              </div>
-              <Link
-                to="#"
-                className="text-sm text-brown-600 hover:text-brown-800"
-              >
-                Forgot password?
-              </Link>
-            </div>
-
             <Button type="submit" disabled={isLoading} className="w-full">
               {isLoading ? (
                 <div className="flex items-center justify-center">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                  Signing in...
+                  Entrando...
                 </div>
               ) : (
-                "Sign In"
+                "Entrar"
               )}
             </Button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-brown-600">
-              Don&apos;t have an account?{" "}
+              Não tem uma conta?{" "}
               <Link
                 to="/register"
                 className="text-brown-800 font-semibold hover:underline"
               >
-                Sign up
+                Cadastre-se
               </Link>
             </p>
           </div>
