@@ -1,0 +1,158 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans antialiased;
+    font-family: "Inter", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "Noto Serif", serif;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center font-medium transition-all duration-200 rounded-lg;
+  }
+
+  .btn-primary {
+    @apply bg-brown-600 hover:bg-brown-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-cream-200 hover:bg-cream-300 text-brown-700 font-medium py-3 px-6 rounded-lg transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-xl border border-cream-200;
+  }
+
+  .mood-emoji {
+    @apply w-16 h-16 text-4xl rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200 border-2 border-transparent hover:scale-110;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg border border-cream-300 focus:border-brown-400 focus:outline-none transition-colors duration-200;
+  }
+
+  .tag-group {
+    @apply bg-white rounded-lg border border-cream-200 p-4;
+  }
+
+  .tag-item {
+    @apply inline-flex items-center space-x-2 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer border;
+  }
+
+  .dragging {
+    @apply opacity-50;
+  }
+
+  .drop-zone {
+    @apply border-2 border-dashed border-brown-300 bg-brown-50 rounded-lg;
+  }
+
+  /* Mood Carousel Styles */
+  .mood-carousel {
+    @apply w-full h-80;
+  }
+
+  .mood-slide {
+    @apply w-64 h-full;
+  }
+
+  .mood-card {
+    @apply w-full h-full bg-white rounded-2xl border-2 border-cream-200 p-6 cursor-pointer transition-all duration-300 hover:scale-105;
+  }
+
+  .mood-card.active {
+    @apply border-brown-400 scale-110;
+  }
+
+  .mood-card.selected {
+    @apply border-brown-600 bg-brown-50;
+  }
+
+  .mood-gradient {
+    @apply w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center;
+  }
+
+  .mood-emoji {
+    @apply text-4xl;
+  }
+
+  .mood-info {
+    @apply text-center;
+  }
+
+  .mood-label {
+    @apply text-lg font-semibold text-brown-800 mb-1;
+  }
+
+  .mood-description {
+    @apply text-sm text-brown-600;
+  }
+
+  /* Swiper pagination customization */
+  .swiper-pagination-bullet {
+    @apply bg-brown-300 opacity-50;
+  }
+
+  .swiper-pagination-bullet-active {
+    @apply bg-brown-600 opacity-100;
+  }
+}
+
+/* Typography styles */
+.heading-xl {
+  @apply text-5xl md:text-6xl font-bold text-brown-800;
+  font-family: "Noto Serif", serif;
+  letter-spacing: -0.02em;
+}
+
+.heading-lg {
+  @apply text-3xl md:text-4xl font-semibold text-brown-800;
+  font-family: "Noto Serif", serif;
+  letter-spacing: -0.01em;
+}
+
+.heading-md {
+  @apply text-xl md:text-2xl font-medium text-brown-800;
+  font-family: "Noto Serif", serif;
+}
+
+.text-accent {
+  @apply text-brown-600 font-medium;
+  font-family: "Inter", sans-serif;
+  letter-spacing: 0.01em;
+}
+
+.text-subtle {
+  @apply text-brown-500 text-sm;
+  font-family: "Inter", sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5e6d3;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8b6f47;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6d5537;
+}
