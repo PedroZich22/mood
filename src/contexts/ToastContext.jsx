@@ -48,26 +48,12 @@ export const ToastProvider = ({ children }) => {
     });
   };
 
-  const showLoading = (message) => {
-    return toast.loading(message, {
-      style: {
-        background: "#f5e6d3",
-        color: "#8b6f47",
-        borderRadius: "12px",
-        padding: "16px",
-        fontWeight: "500",
-      },
-    });
-  };
-
   const dismiss = (toastId) => {
     toast.dismiss(toastId);
   };
 
   return (
-    <ToastContext.Provider
-      value={{ showSuccess, showError, showLoading, dismiss }}
-    >
+    <ToastContext.Provider value={{ showSuccess, showError, dismiss }}>
       {children}
       <Toaster
         position="top-right"
