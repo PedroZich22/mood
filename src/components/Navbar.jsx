@@ -1,28 +1,18 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  Home,
-  Heart,
-  BarChart3,
-  User,
-  Menu,
-  X,
-  LogOut,
-  Settings,
-} from "lucide-react";
+import { Home, Heart, BarChart3, Menu, X, LogOut } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useAuth } from "../contexts/AuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const navigation = [
-    { name: "Dashboard", href: "/", icon: Home },
+    { name: "Dashboard", href: "/dashboard", icon: Home },
     { name: "Mood Tracker", href: "/mood", icon: Heart },
     { name: "Analytics", href: "/analytics", icon: BarChart3 },
-    { name: "Settings", href: "/mood-settings", icon: Settings },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -33,16 +23,10 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <span
-                className="text-2xl font-bold text-brown-800"
-                style={{ fontFamily: "Playfair Display, serif" }}
-              >
-                Mood
-              </span>
+              <h1 className="text-2xl font-bold text-brown-800">Mood</h1>
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navigation.map((item) => {
               const Icon = item.icon;
@@ -64,9 +48,9 @@ const Navbar = () => {
 
             <div className="flex items-center space-x-4">
               <Link
-                to={"/profile"}
+                to={"/user"}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors duration-200 ${
-                  isActive("/profile")
+                  isActive("/user")
                     ? "bg-brown-100 text-brown-800"
                     : "text-brown-600 hover:text-brown-800 hover:bg-brown-50"
                 }`}
@@ -93,7 +77,6 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <Button
               variant="ghost"
@@ -106,7 +89,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       {isOpen && (
         <div className="md:hidden bg-white border-t border-brown-200">
           <div className="px-2 pt-2 pb-3 space-y-1">

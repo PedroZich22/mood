@@ -4,11 +4,14 @@ import { ArrowLeft, Save, Settings, Calendar } from "lucide-react";
 import { useMoods } from "../hooks/useMoods";
 import { useTagGroups } from "../hooks/useTagGroups";
 import { useToast } from "../contexts/ToastContext";
-import { useAuth } from "../contexts/AuthContext";
 import MoodCarousel from "./MoodCarousel";
+import { Button } from "./ui/Button";
+import { Textarea } from "./ui/Textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
+import { Input } from "./ui/Input";
+import { isDateInFuture } from "../utils/date";
 
 const MoodTracker = () => {
-  const { user } = useAuth();
   const [selectedMood, setSelectedMood] = useState(null);
   const [note, setNote] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
@@ -23,7 +26,6 @@ const MoodTracker = () => {
   const { tagGroups, isLoading: tagsLoading } = useTagGroups();
   const { showSuccess, showError } = useToast();
 
-  // Set date from URL parameter if provided
   useEffect(() => {
     const dateParam = searchParams.get("date");
     if (dateParam) {
@@ -48,7 +50,6 @@ const MoodTracker = () => {
       return;
     }
 
-    // Validate date is not in the future
     const selectedDateObj = new Date(selectedDate);
     const today = new Date();
     today.setHours(23, 59, 59, 999);
@@ -73,42 +74,25 @@ const MoodTracker = () => {
       await createMood(moodEntry);
       showSuccess("Mood entry saved successfully!");
       navigate("/");
-    } catch (error) {
+    } catch {
       showError("Failed to save mood entry");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const getIconComponent = (iconName) => {
-    return <div className="w-5 h-5 bg-brown-400 rounded"></div>;
-  };
-
-  const isDateInFuture = (date) => {
-    const selectedDateObj = new Date(date);
-    const today = new Date();
-    today.setHours(23, 59, 59, 999);
-    return selectedDateObj > today;
-  };
-
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <button
+        <div className="flex items-center mb-4">
+          <Button
             onClick={() => navigate("/")}
-            className="flex items-center space-x-2 text-brown-600 hover:text-brown-800 transition-colors"
+            variant="ghost"
+            className="space-x-2"
           >
             <ArrowLeft size={20} />
             <span>Back to Dashboard</span>
-          </button>
-          <button
-            onClick={() => navigate("/mood-settings")}
-            className="flex items-center space-x-2 text-brown-600 hover:text-brown-800 transition-colors"
-          >
-            <Settings size={20} />
-            <span>Configure Tags</span>
-          </button>
+          </Button>
         </div>
         <div className="text-center">
           <h1 className="heading-lg mb-2">Track Your Mood</h1>
@@ -120,14 +104,13 @@ const MoodTracker = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Date Selection */}
-        <div className="card p-6">
-          <div className="flex items-center justify-center space-x-3 mb-4">
+        <Card>
+          <CardHeader className="flex items-center justify-center space-x-3 mb-4">
             <Calendar className="w-5 h-5 text-brown-600" />
-            <h2 className="heading-md">Select Date</h2>
-          </div>
-          <div className="max-w-xs mx-auto">
-            <input
+            <CardTitle>Select Date</CardTitle>
+          </CardHeader>
+          <CardContent className="max-w-xs mx-auto">
+            <Input
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
@@ -139,39 +122,43 @@ const MoodTracker = () => {
                 Cannot create entries for future dates
               </p>
             )}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* Mood Carousel */}
-        <div className="card p-8">
-          <MoodCarousel
-            onMoodSelect={handleMoodSelect}
-            selectedMood={selectedMood}
-          />
-        </div>
+        <Card>
+          <CardContent>
+            <MoodCarousel
+              onMoodSelect={handleMoodSelect}
+              selectedMood={selectedMood}
+            />
+          </CardContent>
+        </Card>
 
-        {/* Tag Groups */}
         {tagsLoading ? (
-          <div className="card p-8">
-            <div className="animate-pulse">
-              <div className="h-6 bg-brown-200 rounded w-1/4 mb-4"></div>
-              <div className="flex flex-wrap gap-2">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="h-8 bg-brown-100 rounded w-16"></div>
-                ))}
+          <Card>
+            <CardContent>
+              <div className="animate-pulse">
+                <div className="h-6 bg-brown-200 rounded w-1/4 mb-4"></div>
+                <div className="flex flex-wrap gap-2">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div
+                      key={i}
+                      className="h-8 bg-brown-100 rounded w-16"
+                    ></div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ) : (
           tagGroups.map((group) => (
-            <div key={group.id} className="card p-8">
-              <div className="flex items-center justify-center space-x-3 mb-6">
-                {getIconComponent(group.icon)}
-                <h2 className="heading-md">
+            <Card key={group.id}>
+              <CardHeader className="items-center justify-center space-x-3 mb-6">
+                <CardTitle>
                   {group.name} <span className="text-subtle">(Optional)</span>
-                </h2>
-              </div>
-              <div className="flex flex-wrap gap-3 justify-center">
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-3 justify-center">
                 {group.tags.map((tag) => (
                   <button
                     key={typeof tag === "string" ? tag : tag.id}
@@ -190,42 +177,42 @@ const MoodTracker = () => {
                     {typeof tag === "string" ? tag : tag.name}
                   </button>
                 ))}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))
         )}
 
-        {/* Note Section */}
-        <div className="card p-8">
-          <h2 className="heading-md mb-6 text-center">
-            Add a Note <span className="text-subtle">(Optional)</span>
-          </h2>
-          <textarea
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="How are you feeling today? What's on your mind?"
-            className="input-field min-h-[120px] resize-none"
-            maxLength={500}
-          />
-          <div className="text-right mt-2">
-            <span className="text-sm text-brown-500">
-              {note.length}/500 characters
-            </span>
-          </div>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Add a Note <span className="text-subtle">(Optional)</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="How are you feeling today? What's on your mind?"
+              maxLength={500}
+            />
+            <div className="text-right mt-2">
+              <span className="text-sm text-brown-500">
+                {note.length}/500 characters
+              </span>
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Submit Button */}
         <div className="flex justify-center">
-          <button
+          <Button
             type="submit"
             disabled={
               !selectedMood || isSubmitting || isDateInFuture(selectedDate)
             }
-            className="btn-primary flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save size={20} />
             <span>{isSubmitting ? "Saving..." : "Save Mood Entry"}</span>
-          </button>
+          </Button>
         </div>
       </form>
     </div>

@@ -1,6 +1,10 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCalendar } from "../hooks/useCalendar";
-import { getMoodCalendarColor, getMoodEmoji } from "../config/mood";
+import {
+  getMoodCalendarColor,
+  getMoodEmoji,
+  MOOD_CONFIG,
+} from "../config/mood";
 import { isDateInFuture } from "../utils/date";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { Button } from "./ui/Button";
@@ -15,33 +19,22 @@ const Calendar = ({ moods, onDateSelect, selectedDate }) => {
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Calendar</CardTitle>
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigateMonth(-1)}
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-            <h3 className="text-lg font-semibold text-brown-800 min-w-[140px] text-center">
-              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-            </h3>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigateMonth(1)}
-            >
-              <ChevronRight className="w-5 h-5" />
-            </Button>
-          </div>
+      <CardHeader className="items-center justify-between">
+        <CardTitle>Calendar</CardTitle>
+        <div className="flex items-center space-x-4">
+          <Button variant="ghost" size="icon" onClick={() => navigateMonth(-1)}>
+            <ChevronLeft className="w-5 h-5" />
+          </Button>
+          <h3 className="text-lg font-semibold text-brown-800 min-w-[140px] text-center">
+            {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+          </h3>
+          <Button variant="ghost" size="icon" onClick={() => navigateMonth(1)}>
+            <ChevronRight className="w-5 h-5" />
+          </Button>
         </div>
       </CardHeader>
 
       <CardContent>
-        {/* Day headers */}
         <div className="grid grid-cols-7 gap-1 mb-2">
           {dayNames.map((day) => (
             <div
@@ -53,7 +46,6 @@ const Calendar = ({ moods, onDateSelect, selectedDate }) => {
           ))}
         </div>
 
-        {/* Calendar grid */}
         <div className="grid grid-cols-7 gap-1">
           {calendarDays.map((day, index) => (
             <button
@@ -98,28 +90,15 @@ const Calendar = ({ moods, onDateSelect, selectedDate }) => {
           ))}
         </div>
 
-        {/* Legend */}
         <div className="mt-4 flex items-center justify-center space-x-4 text-xs text-brown-600">
-          <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-red-100 rounded"></div>
-            <span>Very Sad</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-orange-100 rounded"></div>
-            <span>Sad</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-yellow-100 rounded"></div>
-            <span>Neutral</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-green-100 rounded"></div>
-            <span>Happy</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-green-200 rounded"></div>
-            <span>Very Happy</span>
-          </div>
+          {Object.keys(MOOD_CONFIG.emojis).map((rating) => (
+            <div key={rating} className="flex items-center space-x-1">
+              <div
+                className={`w-3 h-3 rounded-lg ${getMoodCalendarColor(rating)}`}
+              />
+              <span>{MOOD_CONFIG.labels[rating]}</span>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

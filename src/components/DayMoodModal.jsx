@@ -3,6 +3,9 @@ import { X, Edit3, Trash2, Clock, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTagGroups } from "../hooks/useTagGroups";
 import { useToast } from "../contexts/ToastContext";
+import { getMoodEmoji, getMoodLabel } from "../config/mood";
+import { Button } from "./ui/Button";
+import { formatDate, isDateInFuture } from "../utils/date";
 
 const DayMoodModal = ({
   isOpen,
@@ -16,22 +19,6 @@ const DayMoodModal = ({
   const { tagGroups } = useTagGroups();
   const { showSuccess, showError } = useToast();
 
-  const moodEmojis = {
-    1: "😢",
-    2: "😟",
-    3: "😐",
-    4: "😊",
-    5: "😄",
-  };
-
-  const moodLabels = {
-    1: "Very Sad",
-    2: "Sad",
-    3: "Neutral",
-    4: "Happy",
-    5: "Very Happy",
-  };
-
   useEffect(() => {
     if (!isOpen) {
       setEditingMood(null);
@@ -40,16 +27,11 @@ const DayMoodModal = ({
 
   const handleUpdateMood = async () => {
     try {
-      const moodData = {
-        ...editingMood,
-        emoji: moodEmojis[editingMood.rating],
-        label: moodLabels[editingMood.rating],
-      };
-
+      const moodData = { ...editingMood };
       await onUpdateMood(editingMood.id, moodData);
       setEditingMood(null);
       showSuccess("Mood entry updated successfully!");
-    } catch (error) {
+    } catch {
       showError("Failed to update mood entry");
     }
   };
@@ -60,7 +42,7 @@ const DayMoodModal = ({
     try {
       await onDeleteMood(moodId);
       showSuccess("Mood entry deleted successfully!");
-    } catch (error) {
+    } catch {
       showError("Failed to delete mood entry");
     }
   };
@@ -76,40 +58,25 @@ const DayMoodModal = ({
 
   if (!isOpen) return null;
 
-  const isToday = selectedDate.toDateString() === new Date().toDateString();
-  const isPastOrToday = selectedDate <= new Date();
-  const formattedDate = selectedDate.toISOString().split("T")[0];
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-brown-200 p-6 rounded-t-xl">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="heading-md mb-1">
-                {selectedDate.toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </h2>
+              <h2 className="heading-md mb-1">{formatDate(selectedDate)}</h2>
               <p className="text-brown-600 text-sm">
                 {dayMoods.length} mood{" "}
                 {dayMoods.length === 1 ? "entry" : "entries"}
               </p>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-brown-100 rounded-lg transition-colors"
-            >
+            <Button variant="icon" onClick={onClose}>
               <X className="w-5 h-5 text-brown-600" />
-            </button>
+            </Button>
           </div>
         </div>
 
         <div className="p-6">
-          {/* Existing moods */}
           {dayMoods.length > 0 ? (
             <div className="space-y-4 mb-6">
               <h3 className="font-semibold text-brown-800">Mood Entries</h3>
@@ -140,10 +107,10 @@ const DayMoodModal = ({
                               }`}
                             >
                               <div className="text-2xl">
-                                {moodEmojis[rating]}
+                                {getMoodEmoji(rating)}
                               </div>
                               <div className="text-xs text-brown-600 mt-1">
-                                {moodLabels[rating]}
+                                {getMoodLabel(rating)}
                               </div>
                             </button>
                           ))}
@@ -167,7 +134,6 @@ const DayMoodModal = ({
                         />
                       </div>
 
-                      {/* Tags */}
                       {tagGroups.map((group) => (
                         <div key={group.id}>
                           <label className="block text-sm font-medium text-brown-700 mb-2">
@@ -180,12 +146,12 @@ const DayMoodModal = ({
                                 type="button"
                                 onClick={() =>
                                   handleTagToggle(
-                                    typeof tag === "string" ? tag : tag.name,
+                                    typeof tag === "string" ? tag : tag.name
                                   )
                                 }
                                 className={`tag-item transition-all ${
                                   editingMood.tags?.includes(
-                                    typeof tag === "string" ? tag : tag.name,
+                                    typeof tag === "string" ? tag : tag.name
                                   )
                                     ? "bg-brown-600 text-white border-brown-600"
                                     : `${group.color} hover:bg-opacity-80`
@@ -199,35 +165,31 @@ const DayMoodModal = ({
                       ))}
 
                       <div className="flex space-x-3">
-                        <button
-                          onClick={handleUpdateMood}
-                          className="btn-primary"
-                        >
+                        <Button variant="primary" onClick={handleUpdateMood}>
                           Save Changes
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                          variant="secondary"
                           onClick={() => setEditingMood(null)}
-                          className="btn-secondary"
                         >
                           Cancel
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   ) : (
-                    // View mode
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-3">
                         <div className="text-2xl">
-                          {moodEmojis[mood.rating]}
+                          {getMoodEmoji(mood.rating)}
                         </div>
                         <div>
                           <h4 className="font-medium text-brown-800">
-                            {moodLabels[mood.rating]}
+                            {getMoodLabel(mood.rating)}
                           </h4>
                           <p className="text-brown-600 text-sm flex items-center">
                             <Clock className="w-4 h-4 mr-1" />
                             {new Date(
-                              mood.date || mood.createdAt,
+                              mood.date || mood.createdAt
                             ).toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
@@ -235,7 +197,7 @@ const DayMoodModal = ({
                           </p>
                           {mood.note && (
                             <p className="text-brown-700 text-sm mt-2 bg-white p-2 rounded">
-                              "{mood.note}"
+                              &quot;{mood.note}&quot;
                             </p>
                           )}
                           {mood.tags && mood.tags.length > 0 && (
@@ -253,20 +215,18 @@ const DayMoodModal = ({
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <button
+                        <Button
                           onClick={() => setEditingMood(mood)}
-                          className="p-2 text-brown-600 hover:text-brown-800 hover:bg-brown-200 rounded-lg transition-colors"
-                          title="Edit mood"
+                          variant="ghost"
                         >
                           <Edit3 className="w-4 h-4" />
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                           onClick={() => handleDeleteMood(mood.id)}
-                          className="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg transition-colors"
-                          title="Delete mood"
+                          variant="destructive"
                         >
                           <Trash2 className="w-4 h-4" />
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   )}
@@ -282,11 +242,10 @@ const DayMoodModal = ({
             </div>
           )}
 
-          {/* Create new mood button */}
-          {isPastOrToday && (
+          {!isDateInFuture(selectedDate) && (
             <div className="border-t border-brown-200 pt-6">
               <Link
-                to={`/mood?date=${formattedDate}`}
+                to={`/mood?date=${selectedDate.toISOString().split("T")[0]}`}
                 onClick={onClose}
                 className="w-full p-4 border-2 border-dashed border-brown-300 rounded-lg text-brown-600 hover:border-brown-400 hover:bg-brown-50 transition-colors flex items-center justify-center space-x-2 no-underline"
               >

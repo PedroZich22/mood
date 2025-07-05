@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { Calendar, Clock, Tag, Edit3, Trash2, Search } from "lucide-react";
-import { getMoodEmoji, getMoodLabel } from "../config/mood";
+import { Calendar, Clock, Edit3, Trash2, Search } from "lucide-react";
+import { getMoodEmoji, getMoodLabel, MOOD_CONFIG } from "../config/mood";
 import { formatDate, formatTime } from "../utils/date";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { Input } from "./ui/Input";
 import { Select } from "./ui/Select";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
+import { getTagIcon } from "../config/tags";
 
 const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,7 +19,7 @@ const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
       const matchesSearch =
         mood.note?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         mood.tags?.some((tag) =>
-          tag.toLowerCase().includes(searchTerm.toLowerCase()),
+          tag.toLowerCase().includes(searchTerm.toLowerCase())
         );
       const matchesRating =
         filterRating === "all" || mood.rating.toString() === filterRating;
@@ -40,41 +41,39 @@ const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Mood History</CardTitle>
-          <div className="flex items-center space-x-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-brown-400" />
-              <Input
-                type="text"
-                placeholder="Search moods..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 w-48 text-sm py-2"
-              />
-            </div>
-            <Select
-              value={filterRating}
-              onChange={(e) => setFilterRating(e.target.value)}
-              className="text-sm py-2 w-32"
-            >
-              <option value="all">All Moods</option>
-              <option value="5">😄 Very Happy</option>
-              <option value="4">😊 Happy</option>
-              <option value="3">😐 Neutral</option>
-              <option value="2">😟 Sad</option>
-              <option value="1">😢 Very Sad</option>
-            </Select>
-            <Select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="text-sm py-2 w-32"
-            >
-              <option value="date">By Date</option>
-              <option value="rating">By Rating</option>
-            </Select>
+      <CardHeader className="items-center justify-between">
+        <CardTitle>History</CardTitle>
+        <div className="flex items-center space-x-3">
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-brown-400" />
+            <Input
+              type="text"
+              placeholder="Search moods..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 w-48 text-sm py-2"
+            />
           </div>
+          <Select
+            value={filterRating}
+            onChange={(e) => setFilterRating(e.target.value)}
+            className="text-sm py-2 w-32"
+          >
+            <option value="all">All Moods</option>
+            {Object.entries(MOOD_CONFIG.emojis).map(([rating, emoji]) => (
+              <option key={rating} value={rating}>
+                {emoji} {getMoodLabel(rating)}
+              </option>
+            ))}
+          </Select>
+          <Select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="text-sm py-2 w-32"
+          >
+            <option value="date">By Date</option>
+            <option value="rating">By Rating</option>
+          </Select>
         </div>
       </CardHeader>
 
@@ -132,16 +131,19 @@ const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
 
                       {mood.tags && mood.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1">
-                          {mood.tags.map((tag, tagIndex) => (
-                            <Badge
-                              key={tagIndex}
-                              variant="default"
-                              className="text-xs"
-                            >
-                              <Tag className="w-3 h-3 mr-1" />
-                              {tag}
-                            </Badge>
-                          ))}
+                          {mood.tags.map((tag, tagIndex) => {
+                            const IconComponent = getTagIcon(tag);
+                            return (
+                              <Badge
+                                key={tagIndex}
+                                variant="default"
+                                className="text-xs"
+                              >
+                                <IconComponent className="w-3 h-3 mr-1" />
+                                {tag}
+                              </Badge>
+                            );
+                          })}
                         </div>
                       )}
                     </div>
@@ -157,10 +159,9 @@ const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
                       <Edit3 className="w-4 h-4" />
                     </Button>
                     <Button
-                      variant="ghost"
+                      variant="destructive"
                       size="icon"
                       onClick={() => onDeleteMood(mood.id)}
-                      className="text-red-600 hover:text-red-800 hover:bg-red-100"
                       title="Delete mood"
                     >
                       <Trash2 className="w-4 h-4" />

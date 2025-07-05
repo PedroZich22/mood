@@ -7,45 +7,15 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 
 const MoodCarousel = ({ onMoodSelect, selectedMood }) => {
-  const [activeIndex, setActiveIndex] = useState(2); // Start with neutral mood
+  const [activeIndex, setActiveIndex] = useState(2);
 
-  const moods = [
-    {
-      rating: 1,
-      emoji: MOOD_CONFIG.emojis[1],
-      label: MOOD_CONFIG.labels[1],
-      color: MOOD_CONFIG.colors[1],
-      description: MOOD_CONFIG.descriptions[1],
-    },
-    {
-      rating: 2,
-      emoji: MOOD_CONFIG.emojis[2],
-      label: MOOD_CONFIG.labels[2],
-      color: MOOD_CONFIG.colors[2],
-      description: MOOD_CONFIG.descriptions[2],
-    },
-    {
-      rating: 3,
-      emoji: MOOD_CONFIG.emojis[3],
-      label: MOOD_CONFIG.labels[3],
-      color: MOOD_CONFIG.colors[3],
-      description: MOOD_CONFIG.descriptions[3],
-    },
-    {
-      rating: 4,
-      emoji: MOOD_CONFIG.emojis[4],
-      label: MOOD_CONFIG.labels[4],
-      color: MOOD_CONFIG.colors[4],
-      description: MOOD_CONFIG.descriptions[4],
-    },
-    {
-      rating: 5,
-      emoji: MOOD_CONFIG.emojis[5],
-      label: MOOD_CONFIG.labels[5],
-      color: MOOD_CONFIG.colors[5],
-      description: MOOD_CONFIG.descriptions[5],
-    },
-  ];
+  const moods = Object.keys(MOOD_CONFIG.emojis).map((rating) => ({
+    rating: parseInt(rating),
+    emoji: MOOD_CONFIG.emojis[rating],
+    label: MOOD_CONFIG.labels[rating],
+    color: MOOD_CONFIG.colors[rating],
+    description: MOOD_CONFIG.descriptions[rating],
+  }));
 
   const handleSlideChange = (swiper) => {
     setActiveIndex(swiper.activeIndex);

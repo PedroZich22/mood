@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   LineChart,
   Line,
@@ -16,72 +16,14 @@ import { useMoods } from "../hooks/useMoods";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { Select } from "./ui/Select";
 import { StatCard } from "./ui/StatCard";
+import { useStats } from "../hooks/useStats";
 
 const Analytics = () => {
   const [timeRange, setTimeRange] = useState("30d");
   const { isLoading: analyticsLoading } = useAnalytics(timeRange);
   const { moods, isLoading: moodsLoading } = useMoods();
   const [chartData, setChartData] = useState([]);
-  const [stats, setStats] = useState({
-    totalEntries: 0,
-    averageMood: 0,
-    bestDay: "",
-    worstDay: "",
-    mostCommonTags: [],
-  });
-
-  useEffect(() => {
-    if (moods.length > 0) {
-      // Process chart data
-      const processedData = moods
-        .slice(0, 14)
-        .reverse()
-        .map((mood) => ({
-          date: new Date(mood.date || mood.createdAt).toLocaleDateString(
-            "en-US",
-            { month: "short", day: "numeric" }
-          ),
-          mood: mood.rating,
-          fullDate: mood.date || mood.createdAt,
-        }));
-      setChartData(processedData);
-
-      // Calculate stats
-      const avgMood =
-        moods.reduce((sum, mood) => sum + mood.rating, 0) / moods.length;
-
-      const sortedMoods = [...moods].sort((a, b) => b.rating - a.rating);
-      const bestDay = sortedMoods[0]
-        ? new Date(
-            sortedMoods[0].date || sortedMoods[0].createdAt
-          ).toLocaleDateString()
-        : "";
-      const worstDay = sortedMoods[sortedMoods.length - 1]
-        ? new Date(
-            sortedMoods[sortedMoods.length - 1].date ||
-              sortedMoods[sortedMoods.length - 1].createdAt
-          ).toLocaleDateString()
-        : "";
-
-      const allTags = moods.flatMap((mood) => mood.tags || []);
-      const tagCounts = allTags.reduce((acc, tag) => {
-        acc[tag] = (acc[tag] || 0) + 1;
-        return acc;
-      }, {});
-      const mostCommonTags = Object.entries(tagCounts)
-        .sort(([, a], [, b]) => b - a)
-        .slice(0, 5)
-        .map(([tag, count]) => ({ tag, count }));
-
-      setStats({
-        totalEntries: moods.length,
-        averageMood: avgMood,
-        bestDay,
-        worstDay,
-        mostCommonTags,
-      });
-    }
-  }, [moods]);
+  const stats = useStats(moods);
 
   if (moodsLoading || analyticsLoading) {
     return (
@@ -124,7 +66,6 @@ const Analytics = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <StatCard
           icon={Calendar}
@@ -158,7 +99,6 @@ const Analytics = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Mood Trend Chart */}
         <Card>
           <CardHeader>
             <CardTitle>Mood Trend (Last 14 Days)</CardTitle>
@@ -189,7 +129,6 @@ const Analytics = () => {
           </CardContent>
         </Card>
 
-        {/* Most Common Tags */}
         <Card>
           <CardHeader>
             <CardTitle>Most Common Tags</CardTitle>
@@ -213,83 +152,6 @@ const Analytics = () => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Insights */}
-      <Card className="mt-8">
-        <CardHeader>
-          <CardTitle>Insights & Recommendations</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {stats.averageMood > 3.5 && (
-              <div className="flex items-start space-x-3 p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl">😊</div>
-                <div>
-                  <h3 className="font-semibold text-green-800">
-                    Great Mood Average!
-                  </h3>
-                  <p className="text-green-700 text-sm">
-                    Your average mood of {stats.averageMood.toFixed(1)}/5 shows
-                    you&apos;re generally feeling positive. Keep up the great
-                    work with your mood tracking!
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {stats.averageMood < 3 && (
-              <div className="flex items-start space-x-3 p-4 bg-orange-50 rounded-lg">
-                <div className="text-2xl">🤗</div>
-                <div>
-                  <h3 className="font-semibold text-orange-800">
-                    Consider Self-Care
-                  </h3>
-                  <p className="text-orange-700 text-sm">
-                    Your average mood of {stats.averageMood.toFixed(1)}/5
-                    suggests you might be going through a challenging time.
-                    Remember to practice self-care and consider reaching out to
-                    friends, family, or a professional for support.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {stats.mostCommonTags.length > 0 && (
-              <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg">
-                <div className="text-2xl">🏷️</div>
-                <div>
-                  <h3 className="font-semibold text-blue-800">Tag Patterns</h3>
-                  <p className="text-blue-700 text-sm">
-                    Your most common tags are:{" "}
-                    {stats.mostCommonTags
-                      .slice(0, 3)
-                      .map((t) => t.tag)
-                      .join(", ")}
-                    . This can help you identify patterns in what affects your
-                    mood.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {stats.totalEntries < 7 && (
-              <div className="flex items-start space-x-3 p-4 bg-purple-50 rounded-lg">
-                <div className="text-2xl">📈</div>
-                <div>
-                  <h3 className="font-semibold text-purple-800">
-                    Build Consistency
-                  </h3>
-                  <p className="text-purple-700 text-sm">
-                    You&apos;ve tracked {stats.totalEntries} mood entries so
-                    far. Try to track your mood daily to get better insights
-                    into your emotional patterns over time.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

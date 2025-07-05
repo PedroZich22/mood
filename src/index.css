@@ -30,10 +30,6 @@
     @apply bg-cream-200 hover:bg-cream-300 text-brown-700 font-medium py-3 px-6 rounded-lg transition-all duration-200;
   }
 
-  .card {
-    @apply bg-white rounded-xl border border-cream-200;
-  }
-
   .mood-emoji {
     @apply w-16 h-16 text-4xl rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200 border-2 border-transparent hover:scale-110;
   }

@@ -16,9 +16,10 @@ import { StatCard } from "./ui/StatCard";
 import Calendar from "./Calendar";
 import MoodList from "./MoodList";
 import DayMoodModal from "./DayMoodModal";
+import { getMoodEmoji, MOOD_CONFIG } from "../config/mood";
 
 const Dashboard = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const { moods, updateMood, deleteMood, isLoading } = useMoods();
   const stats = useStats(moods);
   const [viewMode, setViewMode] = useState("calendar");
@@ -77,7 +78,6 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Compact Welcome Section */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-brown-800 mb-1">
@@ -94,7 +94,6 @@ const Dashboard = () => {
         </Link>
       </div>
 
-      {/* Compact Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <StatCard
           icon={Zap}
@@ -124,24 +123,17 @@ const Dashboard = () => {
         <StatCard
           icon={() => (
             <span className="text-lg">
-              {stats.averageMood >= 4
-                ? "😊"
-                : stats.averageMood >= 3
-                  ? "😐"
-                  : "😔"}
+              {getMoodEmoji(stats.averageMood) || MOOD_CONFIG.emojis[1]}
             </span>
           )}
           title="Avg Mood"
-          value={stats.averageMood.toFixed(1)}
+          value={stats.averageMood}
           iconBgColor="bg-purple-100"
         />
       </div>
 
-      {/* View Toggle */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-brown-800">
-          Your Mood Journey
-        </h2>
+        <h2 className="text-xl font-semibold text-brown-800">Your Journey</h2>
         <div className="flex items-center space-x-2 bg-brown-100 rounded-lg p-1">
           <Button
             variant={viewMode === "calendar" ? "default" : "ghost"}
@@ -164,7 +156,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Content based on view mode */}
       {viewMode === "calendar" ? (
         <Calendar
           moods={moods}
@@ -174,14 +165,11 @@ const Dashboard = () => {
       ) : (
         <MoodList
           moods={moods}
-          onEditMood={(mood) => {
-            console.log("Edit mood:", mood);
-          }}
+          onEditMood={() => {}}
           onDeleteMood={handleDeleteMood}
         />
       )}
 
-      {/* Day Mood Modal */}
       <DayMoodModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
