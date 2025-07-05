@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { User, Bell, Camera, Save } from "lucide-react";
-import { useUser as useUserHook } from "../hooks/useUser";
+import { useProfile } from "../hooks/useProfile";
 import { useAuth } from "../contexts/AuthContext";
 import { useMoods } from "../hooks/useMoods";
 import { useToast } from "../contexts/ToastContext";
@@ -20,7 +20,7 @@ const Profile = () => {
     exportData,
     deleteAccount,
     isLoading,
-  } = useUserHook();
+  } = useProfile();
   const { moods } = useMoods();
   const { showSuccess, showError } = useToast();
   const [profileData, setProfileData] = useState({
@@ -108,7 +108,6 @@ const Profile = () => {
     try {
       await deleteAccount();
       showSuccess("Account deleted successfully!");
-      // Redirect to landing page or logout
     } catch (error) {
       showError(error);
     }
@@ -144,7 +143,6 @@ const Profile = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Profile Overview */}
         <Card className="p-6">
           <div className="text-center">
             <div className="relative inline-block mb-4">
@@ -190,7 +188,6 @@ const Profile = () => {
           </div>
         </Card>
 
-        {/* Profile Settings */}
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
@@ -206,7 +203,6 @@ const Profile = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {/* Personal Information */}
                 <div>
                   <h3 className="text-lg font-medium text-brown-800 mb-4 flex items-center">
                     <User className="w-5 h-5 mr-2" />
@@ -242,7 +238,6 @@ const Profile = () => {
                   </div>
                 </div>
 
-                {/* Preferences */}
                 <div>
                   <h3 className="text-lg font-medium text-brown-800 mb-4 flex items-center">
                     <Bell className="w-5 h-5 mr-2" />
@@ -305,7 +300,6 @@ const Profile = () => {
                   </div>
                 </div>
 
-                {/* Actions */}
                 {isEditing && (
                   <div className="flex justify-end space-x-3 pt-4 border-t border-brown-200">
                     <Button
@@ -328,7 +322,6 @@ const Profile = () => {
             </CardContent>
           </Card>
 
-          {/* Data Management */}
           <Card className="mt-6">
             <CardHeader>
               <CardTitle>Data Management</CardTitle>
