@@ -1,4 +1,5 @@
 import { cn } from "../../utils/cn";
+import { Card } from "./Card";
 
 const StatCard = ({
   icon: Icon,
@@ -11,12 +12,12 @@ const StatCard = ({
   className,
 }) => {
   return (
-    <div className={cn("card p-4 text-center", className)}>
+    <Card className={cn("p-4 text-center", className)}>
       <div className="flex justify-center mb-2">
         <div
           className={cn(
             "w-10 h-10 rounded-full flex items-center justify-center",
-            iconBgColor,
+            iconBgColor
           )}
         >
           <Icon className={cn("w-5 h-5", iconColor)} />
@@ -33,7 +34,7 @@ const StatCard = ({
           />
         </div>
       )}
-    </div>
+    </Card>
   );
 };
 
