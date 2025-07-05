@@ -1,55 +1,50 @@
 import apiClient from "../config/api";
 
 export const tagService = {
-  // Get all tag groups for user
   getTagGroups: async () => {
     try {
       const response = await apiClient.get("/tags/groups");
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch tag groups",
+        error.response?.data?.message || "Failed to fetch tag groups"
       );
     }
   },
 
-  // Create new tag group
   createTagGroup: async (groupData) => {
     try {
       const response = await apiClient.post("/tags/groups", groupData);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to create tag group",
+        error.response?.data?.message || "Failed to create tag group"
       );
     }
   },
 
-  // Update tag group
   updateTagGroup: async (id, groupData) => {
     try {
       const response = await apiClient.put(`/tags/groups/${id}`, groupData);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to update tag group",
+        error.response?.data?.message || "Failed to update tag group"
       );
     }
   },
 
-  // Delete tag group
   deleteTagGroup: async (id) => {
     try {
       await apiClient.delete(`/tags/groups/${id}`);
       return true;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to delete tag group",
+        error.response?.data?.message || "Failed to delete tag group"
       );
     }
   },
 
-  // Reorder tag groups
   reorderTagGroups: async (groupIds) => {
     try {
       const response = await apiClient.put("/tags/groups/reorder", {
@@ -58,12 +53,11 @@ export const tagService = {
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to reorder tag groups",
+        error.response?.data?.message || "Failed to reorder tag groups"
       );
     }
   },
 
-  // Add tag to group
   addTagToGroup: async (groupId, tagName) => {
     try {
       const response = await apiClient.post(`/tags/groups/${groupId}/tags`, {
@@ -75,7 +69,6 @@ export const tagService = {
     }
   },
 
-  // Remove tag from group
   removeTagFromGroup: async (groupId, tagId) => {
     try {
       await apiClient.delete(`/tags/groups/${groupId}/tags/${tagId}`);

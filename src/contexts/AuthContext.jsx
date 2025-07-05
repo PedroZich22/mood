@@ -22,13 +22,10 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const storedUser = localStorage.getItem("moodUser");
       const token = localStorage.getItem("authToken");
 
-      if (storedUser && token) {
-        // Verify token is still valid
+      if (token) {
         await authService.verifyToken();
-        setUser(JSON.parse(storedUser));
       }
     } catch (error) {
       console.error("Auth check failed:", error);
@@ -42,9 +39,11 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       setError(null);
-      const { user: userData } = await authService.login(credentials);
-      setUser(userData);
-      return userData;
+      const { token, user } = await authService.login(credentials);
+
+      localStorage.setItem("authToken", token);
+
+      setUser(user);
     } catch (error) {
       setError(error.message);
       throw error;
@@ -57,9 +56,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       setError(null);
-      const { user: newUser } = await authService.register(userData);
-      setUser(newUser);
-      return newUser;
+      authService.register(userData);
     } catch (error) {
       setError(error.message);
       throw error;

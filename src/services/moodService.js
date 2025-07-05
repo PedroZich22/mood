@@ -1,7 +1,6 @@
 import apiClient from "../config/api";
 
 export const moodService = {
-  // Get all mood entries for user
   getMoods: async (params = {}) => {
     try {
       const response = await apiClient.get("/moods", { params });
@@ -11,7 +10,6 @@ export const moodService = {
     }
   },
 
-  // Get single mood entry
   getMood: async (id) => {
     try {
       const response = await apiClient.get(`/moods/${id}`);
@@ -21,19 +19,17 @@ export const moodService = {
     }
   },
 
-  // Create new mood entry
   createMood: async (moodData) => {
     try {
       const response = await apiClient.post("/moods", moodData);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to create mood entry",
+        error.response?.data?.message || "Failed to create mood entry"
       );
     }
   },
 
-  // Update mood entry
   updateMood: async (id, moodData) => {
     try {
       const response = await apiClient.put(`/moods/${id}`, moodData);
@@ -43,7 +39,6 @@ export const moodService = {
     }
   },
 
-  // Delete mood entry
   deleteMood: async (id) => {
     try {
       await apiClient.delete(`/moods/${id}`);
@@ -53,28 +48,26 @@ export const moodService = {
     }
   },
 
-  // Get mood analytics
   getAnalytics: async (timeRange = "30d") => {
     try {
       const response = await apiClient.get(
-        `/moods/analytics?range=${timeRange}`,
+        `/moods/analytics?range=${timeRange}`
       );
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch analytics",
+        error.response?.data?.message || "Failed to fetch analytics"
       );
     }
   },
 
-  // Get mood trends
   getTrends: async (period = "week") => {
     try {
       const response = await apiClient.get(`/moods/trends?period=${period}`);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch trends",
+        error.response?.data?.message || "Failed to fetch trends"
       );
     }
   },

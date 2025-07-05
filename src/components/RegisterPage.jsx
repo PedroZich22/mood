@@ -5,8 +5,9 @@ import { Card } from "./ui/Card";
 import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { useToast } from "../contexts/ToastContext";
+import { useAuth } from "../contexts/AuthContext";
 
-const RegisterPage = ({ onLogin }) => {
+const RegisterPage = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,6 +18,7 @@ const RegisterPage = ({ onLogin }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
   const { showError } = useToast();
 
   const handleSubmit = async (e) => {
@@ -29,12 +31,12 @@ const RegisterPage = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      await onLogin({
+      await login({
         name: formData.name,
         email: formData.email,
         password: formData.password,
       });
-      navigate("/dashboard");
+      navigate("/login");
     } catch (error) {
       showError(error);
     } finally {
