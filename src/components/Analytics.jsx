@@ -26,6 +26,8 @@ const Analytics = () => {
   const { moods, isLoading: moodsLoading } = useMoods();
   const stats = useStats(moods);
 
+  console.log(analytics);
+
   useEffect(() => {
     if (analytics) {
       const formattedData = analytics.map((entry) => ({
