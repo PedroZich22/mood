@@ -1,27 +1,17 @@
 import { useState, useEffect } from "react";
-import { User, Bell, Camera, Save } from "lucide-react";
 import { useProfile } from "../hooks/useProfile";
 import { useAuth } from "../contexts/AuthContext";
-import { useMoods } from "../hooks/useMoods";
 import { useToast } from "../contexts/ToastContext";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { Input } from "./ui/Input";
-import { Select } from "./ui/Select";
 import { Button } from "./ui/Button";
+import { PageHeader } from "./ui/PageHeader";
+import { formatDate } from "../utils/date";
+import { Pencil, Save, UserCircle } from "lucide-react";
 
 const Profile = () => {
   const { user } = useAuth();
-  const {
-    profile,
-    settings,
-    updateProfile,
-    updateSettings,
-    uploadAvatar,
-    exportData,
-    deleteAccount,
-    isLoading,
-  } = useProfile();
-  const { moods } = useMoods();
+  const { profile, updateProfile, deleteAccount, isLoading } = useProfile();
   const { showSuccess, showError } = useToast();
   const [profileData, setProfileData] = useState({
     name: user.name || "",
@@ -38,12 +28,9 @@ const Profile = () => {
       setProfileData({
         name: profile.name || user.name || "",
         email: profile.email || user.email || "",
-        notifications: settings?.notifications ?? true,
-        privacy: settings?.privacy || "private",
-        theme: settings?.theme || "brown",
       });
     }
-  }, [profile, settings, user]);
+  }, [profile, user]);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -51,12 +38,6 @@ const Profile = () => {
       await updateProfile({
         name: profileData.name,
         email: profileData.email,
-      });
-
-      await updateSettings({
-        notifications: profileData.notifications,
-        privacy: profileData.privacy,
-        theme: profileData.theme,
       });
 
       showSuccess("Profile updated successfully!");
@@ -74,27 +55,6 @@ const Profile = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-  };
-
-  const handleAvatarUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    try {
-      await uploadAvatar(file);
-      showSuccess("Avatar updated successfully!");
-    } catch (error) {
-      showError(error);
-    }
-  };
-
-  const handleExportData = async () => {
-    try {
-      await exportData();
-      showSuccess("Data exported successfully!");
-    } catch (error) {
-      showError(error);
-    }
   };
 
   const handleDeleteAccount = async () => {
@@ -135,37 +95,19 @@ const Profile = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="heading-lg mb-2">Profile Settings</h1>
-        <p className="text-brown-600 font-light">
-          Manage your account settings and preferences.
-        </p>
-      </div>
+      <PageHeader
+        title="Profile Settings"
+        description="Manage your account settings and preferences."
+        badge={{ icon: UserCircle, text: "Your profile" }}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <Card className="p-6">
           <div className="text-center">
             <div className="relative inline-block mb-4">
               <div className="w-24 h-24 bg-brown-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">
-                {profile?.avatar ? (
-                  <img
-                    src={profile.avatar}
-                    alt="Avatar"
-                    className="w-24 h-24 rounded-full object-cover"
-                  />
-                ) : (
-                  user.name?.charAt(0).toUpperCase()
-                )}
+                {user.name?.charAt(0).toUpperCase()}
               </div>
-              <label className="absolute bottom-0 right-0 bg-brown-800 text-white p-2 rounded-full hover:bg-brown-700 transition-colors cursor-pointer">
-                <Camera size={16} />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarUpload}
-                  className="hidden"
-                />
-              </label>
             </div>
             <h2 className="heading-md mb-1">{profileData.name}</h2>
             <p className="text-brown-600 font-light mb-4">
@@ -175,14 +117,8 @@ const Profile = () => {
               <div className="flex items-center justify-between">
                 <span className="text-brown-600">Member since:</span>
                 <span className="text-brown-800">
-                  {profile?.createdAt
-                    ? new Date(profile.createdAt).toLocaleDateString()
-                    : "January 2024"}
+                  {profile?.createdAt && formatDate(profile.createdAt)}
                 </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-brown-600">Mood entries:</span>
-                <span className="text-brown-800">{moods.length}</span>
               </div>
             </div>
           </div>
@@ -190,134 +126,64 @@ const Profile = () => {
 
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Account Settings</CardTitle>
-                <Button
-                  variant="secondary"
-                  onClick={() => setIsEditing(!isEditing)}
-                >
-                  {isEditing ? "Cancel" : "Edit"}
+            <CardHeader className="items-center justify-between">
+              <CardTitle>Account Settings</CardTitle>
+              {isEditing ? (
+                <div className="flex items-center justify-between gap-2">
+                  <Button
+                    variant="secondary"
+                    onClick={() => setIsEditing(false)}
+                    size="sm"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleSave}
+                    disabled={isSaving}
+                    className="flex items-center space-x-2"
+                    size="sm"
+                  >
+                    <Save size={16} />
+                    <span>{isSaving ? "Saving..." : "Save Changes"}</span>
+                  </Button>
+                </div>
+              ) : (
+                <Button onClick={() => setIsEditing(true)} size="sm">
+                  <Pencil size={16} className="mr-2" />
+                  Edit Profile
                 </Button>
-              </div>
+              )}
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-medium text-brown-800 mb-4 flex items-center">
-                    <User className="w-5 h-5 mr-2" />
-                    Personal Information
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-brown-700 mb-2">
-                        Full Name
-                      </label>
-                      <Input
-                        type="text"
-                        name="name"
-                        value={profileData.name}
-                        onChange={handleChange}
-                        disabled={!isEditing}
-                        className="w-full"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-brown-700 mb-2">
-                        Email Address
-                      </label>
-                      <Input
-                        type="email"
-                        name="email"
-                        value={profileData.email}
-                        onChange={handleChange}
-                        disabled={!isEditing}
-                        className="w-full"
-                      />
-                    </div>
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-brown-700 mb-2">
+                      Full Name
+                    </label>
+                    <Input
+                      type="text"
+                      name="name"
+                      value={profileData.name}
+                      onChange={handleChange}
+                      disabled={!isEditing}
+                      className="w-full"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-brown-700 mb-2">
+                      Email Address
+                    </label>
+                    <Input
+                      type="email"
+                      name="email"
+                      value={profileData.email}
+                      onChange={handleChange}
+                      disabled={!isEditing}
+                      className="w-full"
+                    />
                   </div>
                 </div>
-
-                <div>
-                  <h3 className="text-lg font-medium text-brown-800 mb-4 flex items-center">
-                    <Bell className="w-5 h-5 mr-2" />
-                    Preferences
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <label className="text-sm font-medium text-brown-700">
-                          Email Notifications
-                        </label>
-                        <p className="text-sm text-brown-600">
-                          Receive reminders and updates via email
-                        </p>
-                      </div>
-                      <input
-                        type="checkbox"
-                        name="notifications"
-                        checked={profileData.notifications}
-                        onChange={handleChange}
-                        disabled={!isEditing}
-                        className="w-4 h-4 text-brown-600 border-brown-300 rounded focus:ring-brown-500"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-brown-700 mb-2">
-                        Privacy Level
-                      </label>
-                      <Select
-                        name="privacy"
-                        value={profileData.privacy}
-                        onChange={handleChange}
-                        disabled={!isEditing}
-                        className="w-full"
-                      >
-                        <option value="private">Private</option>
-                        <option value="friends">Friends Only</option>
-                        <option value="public">Public</option>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-brown-700 mb-2">
-                        Theme
-                      </label>
-                      <Select
-                        name="theme"
-                        value={profileData.theme}
-                        onChange={handleChange}
-                        disabled={!isEditing}
-                        className="w-full"
-                      >
-                        <option value="brown">Brown Theme</option>
-                        <option value="blue">Blue Theme</option>
-                        <option value="green">Green Theme</option>
-                        <option value="purple">Purple Theme</option>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-
-                {isEditing && (
-                  <div className="flex justify-end space-x-3 pt-4 border-t border-brown-200">
-                    <Button
-                      variant="secondary"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleSave}
-                      disabled={isSaving}
-                      className="flex items-center space-x-2"
-                    >
-                      <Save size={16} />
-                      <span>{isSaving ? "Saving..." : "Save Changes"}</span>
-                    </Button>
-                  </div>
-                )}
               </div>
             </CardContent>
           </Card>
@@ -330,27 +196,7 @@ const Profile = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-sm font-medium text-brown-700">
-                      Export Data
-                    </h3>
-                    <p className="text-sm text-brown-600">
-                      Download all your mood data as a CSV file
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    onClick={handleExportData}
-                    size="sm"
-                  >
-                    Export
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-sm font-medium text-red-700">
-                      Delete Account
-                    </h3>
+                    <h3 className="font-medium text-red-700">Delete Account</h3>
                     <p className="text-sm text-brown-600">
                       Permanently delete your account and all data
                     </p>
