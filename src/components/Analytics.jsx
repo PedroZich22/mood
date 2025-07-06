@@ -45,18 +45,17 @@ const Analytics = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="heading-lg mb-2">Mood Analytics</h1>
-            <p className="text-brown-600 font-light">
-              Insights into your emotional patterns and trends.
-            </p>
-          </div>
+      <div className="flex items-center justify-between mb-8">
+        <div className="w-full">
+          <h1 className="heading-lg mb-2">Mood Analytics</h1>
+          <p className="text-brown-600 font-light">
+            Insights into your emotional patterns and trends.
+          </p>
+        </div>
+        <div className="w-40">
           <Select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value)}
-            className="w-32"
           >
             <option value="7d">7 Days</option>
             <option value="30d">30 Days</option>
@@ -78,7 +77,7 @@ const Analytics = () => {
         <StatCard
           icon={TrendingUp}
           title="Average Mood"
-          value={`${stats.averageMood.toFixed(1)}/5`}
+          value={`${stats.averageMood}/5`}
           iconColor="text-purple-600"
           iconBgColor="bg-purple-100"
         />
@@ -101,7 +100,7 @@ const Analytics = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card>
           <CardHeader>
-            <CardTitle>Mood Trend (Last 14 Days)</CardTitle>
+            <CardTitle>Mood Trend</CardTitle>
           </CardHeader>
           <CardContent>
             {chartData.length > 0 ? (
@@ -134,7 +133,7 @@ const Analytics = () => {
             <CardTitle>Most Common Tags</CardTitle>
           </CardHeader>
           <CardContent>
-            {stats.mostCommonTags.length > 0 ? (
+            {stats.mostCommonTags?.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={stats.mostCommonTags}>
                   <CartesianGrid strokeDasharray="3 3" />
