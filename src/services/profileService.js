@@ -1,6 +1,6 @@
 import apiClient from "../config/api";
 
-export const userService = {
+export const profileService = {
   getProfile: async () => {
     try {
       const response = await apiClient.get("/user");

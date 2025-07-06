@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { userService } from "../services/userService";
+import { profileService } from "../services/profileService";
 
 export const useProfile = () => {
   const [profile, setProfile] = useState(null);
@@ -15,7 +15,7 @@ export const useProfile = () => {
       setIsLoading(true);
       setError(null);
 
-      const profileData = await userService.getProfile();
+      const profileData = await profileService.getProfile();
 
       setProfile(profileData);
     } catch (error) {
@@ -28,7 +28,7 @@ export const useProfile = () => {
 
   const updateProfile = async (profileData) => {
     try {
-      const updatedProfile = await userService.updateProfile(profileData);
+      const updatedProfile = await profileService.updateProfile(profileData);
       setProfile(updatedProfile);
       return updatedProfile;
     } catch (error) {
@@ -39,7 +39,7 @@ export const useProfile = () => {
 
   const deleteAccount = async () => {
     try {
-      await userService.deleteAccount();
+      await profileService.deleteAccount();
       return true;
     } catch (error) {
       setError(error.message);
