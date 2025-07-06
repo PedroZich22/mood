@@ -6,6 +6,7 @@ import {
   Target,
   Calendar as CalendarIcon,
   List,
+  Sparkles,
 } from "lucide-react";
 import { useMoods } from "../hooks/useMoods";
 import { useStats } from "../hooks/useStats";
@@ -17,6 +18,7 @@ import Calendar from "./Calendar";
 import MoodList from "./MoodList";
 import DayMoodModal from "./DayMoodModal";
 import { getMoodEmoji, MOOD_CONFIG } from "../config/mood";
+import { PageHeader } from "./ui/PageHeader";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -78,31 +80,19 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-brown-800 mb-1">
-            {getGreeting()}, {user.name}! 👋
-          </h1>
-          <p className="text-brown-600 text-sm">
-            Track your emotional journey and build healthy habits
-          </p>
-        </div>
-
-        <Link to="/mood" className="btn btn-primary space-x-2">
-          <Plus size={20} />
-          <span>Track Mood</span>
-        </Link>
-      </div>
+      <PageHeader
+        title={`${getGreeting()}, ${user.name}! 👋`}
+        description="Track your emotional journey and build healthy habits"
+        badge={{ icon: Sparkles, text: "Your wellness dashboard" }}
+        action={
+          <Link to="/mood" className="btn btn-primary space-x-2">
+            <Plus size={20} />
+            <span>Track Mood</span>
+          </Link>
+        }
+      />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <StatCard
-          icon={Zap}
-          title="Day Streak"
-          value={stats.streakDays}
-          iconColor="text-orange-600"
-          iconBgColor="bg-orange-100"
-        />
-
         <StatCard
           icon={Target}
           title="Weekly Goal"
@@ -113,11 +103,11 @@ const Dashboard = () => {
         />
 
         <StatCard
-          icon={CalendarIcon}
-          title="Total Entries"
-          value={stats.totalEntries}
-          iconColor="text-blue-600"
-          iconBgColor="bg-blue-100"
+          icon={Zap}
+          title="Day Streak"
+          value={stats.streakDays}
+          iconColor="text-orange-600"
+          iconBgColor="bg-orange-100"
         />
 
         <StatCard
@@ -129,6 +119,14 @@ const Dashboard = () => {
           title="Avg Mood"
           value={stats.averageMood}
           iconBgColor="bg-purple-100"
+        />
+
+        <StatCard
+          icon={CalendarIcon}
+          title="Total Entries"
+          value={stats.totalEntries}
+          iconColor="text-blue-600"
+          iconBgColor="bg-blue-100"
         />
       </div>
 

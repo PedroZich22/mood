@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -10,20 +10,31 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import { TrendingUp, Calendar } from "lucide-react";
+import { TrendingUp, Calendar, BarChart2 } from "lucide-react";
 import { useAnalytics } from "../hooks/useAnalytics";
 import { useMoods } from "../hooks/useMoods";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { Select } from "./ui/Select";
 import { StatCard } from "./ui/StatCard";
 import { useStats } from "../hooks/useStats";
+import { PageHeader } from "./ui/PageHeader";
 
 const Analytics = () => {
-  const [timeRange, setTimeRange] = useState("30d");
-  const { isLoading: analyticsLoading } = useAnalytics(timeRange);
-  const { moods, isLoading: moodsLoading } = useMoods();
   const [chartData, setChartData] = useState([]);
+  const [timeRange, setTimeRange] = useState("30d");
+  const { isLoading: analyticsLoading, analytics } = useAnalytics(timeRange);
+  const { moods, isLoading: moodsLoading } = useMoods();
   const stats = useStats(moods);
+
+  useEffect(() => {
+    if (analytics) {
+      const formattedData = analytics.map((entry) => ({
+        date: new Date(entry.date).toLocaleDateString(),
+        mood: entry.averageMood,
+      }));
+      setChartData(formattedData);
+    }
+  }, [analytics]);
 
   if (moodsLoading || analyticsLoading) {
     return (
@@ -38,6 +49,13 @@ const Analytics = () => {
               </Card>
             ))}
           </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {[1, 2].map((i) => (
+              <Card key={i} className="p-6 h-64">
+                <div className="h-full bg-brown-100 rounded"></div>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -45,25 +63,23 @@ const Analytics = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-center justify-between mb-8">
-        <div className="w-full">
-          <h1 className="heading-lg mb-2">Mood Analytics</h1>
-          <p className="text-brown-600 font-light">
-            Insights into your emotional patterns and trends.
-          </p>
-        </div>
-        <div className="w-40">
+      <PageHeader
+        title="Mood Analytics"
+        description="Insights into your emotional patterns and trends."
+        badge={{ icon: BarChart2, text: "Data insights" }}
+        action={
           <Select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value)}
+            className="w-32"
           >
             <option value="7d">7 Days</option>
             <option value="30d">30 Days</option>
             <option value="90d">90 Days</option>
             <option value="1y">1 Year</option>
           </Select>
-        </div>
-      </div>
+        }
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <StatCard
