@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
 import { X, Edit3, Trash2, Clock, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useTagGroups } from "../hooks/useTagGroups";
 import { useToast } from "../contexts/ToastContext";
 import { getMoodEmoji, getMoodLabel } from "../config/mood";
 import { Button } from "./ui/Button";
@@ -12,28 +10,13 @@ const DayMoodModal = ({
   onClose,
   selectedDate,
   dayMoods,
-  onUpdateMood,
+  onEditMood,
   onDeleteMood,
 }) => {
-  const [editingMood, setEditingMood] = useState(null);
-  const { tagGroups } = useTagGroups();
   const { showSuccess, showError } = useToast();
 
-  useEffect(() => {
-    if (!isOpen) {
-      setEditingMood(null);
-    }
-  }, [isOpen]);
-
-  const handleUpdateMood = async () => {
-    try {
-      const moodData = { ...editingMood };
-      await onUpdateMood(editingMood.id, moodData);
-      setEditingMood(null);
-      showSuccess("Mood entry updated successfully!");
-    } catch {
-      showError("Failed to update mood entry");
-    }
+  const handleEditMood = (moodId) => {
+    onEditMood(moodId);
   };
 
   const handleDeleteMood = async (moodId) => {
@@ -45,15 +28,6 @@ const DayMoodModal = ({
     } catch {
       showError("Failed to delete mood entry");
     }
-  };
-
-  const handleTagToggle = (tag) => {
-    setEditingMood((prev) => ({
-      ...prev,
-      tags: prev.tags.includes(tag)
-        ? prev.tags.filter((t) => t !== tag)
-        : [...prev.tags, tag],
-    }));
   };
 
   if (!isOpen) return null;
@@ -70,7 +44,7 @@ const DayMoodModal = ({
                 {dayMoods.length === 1 ? "entry" : "entries"}
               </p>
             </div>
-            <Button variant="icon" onClick={onClose}>
+            <Button variant="ghost" onClick={onClose} aria-label="Close Modal">
               <X className="w-5 h-5 text-brown-600" />
             </Button>
           </div>
@@ -85,151 +59,60 @@ const DayMoodModal = ({
                   key={mood.id || index}
                   className="bg-brown-50 rounded-lg p-4"
                 >
-                  {editingMood?.id === mood.id ? (
-                    // Edit mode
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-brown-700 mb-2">
-                          How are you feeling?
-                        </label>
-                        <div className="flex space-x-2">
-                          {[1, 2, 3, 4, 5].map((rating) => (
-                            <button
-                              key={rating}
-                              type="button"
-                              onClick={() =>
-                                setEditingMood((prev) => ({ ...prev, rating }))
-                              }
-                              className={`p-3 rounded-lg border-2 transition-all ${
-                                editingMood.rating === rating
-                                  ? "border-brown-600 bg-brown-100 scale-110"
-                                  : "border-brown-200 hover:border-brown-400"
-                              }`}
-                            >
-                              <div className="text-2xl">
-                                {getMoodEmoji(rating)}
-                              </div>
-                              <div className="text-xs text-brown-600 mt-1">
-                                {getMoodLabel(rating)}
-                              </div>
-                            </button>
-                          ))}
-                        </div>
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3">
+                      <div className="text-2xl">
+                        {getMoodEmoji(mood.rating)}
                       </div>
-
                       <div>
-                        <label className="block text-sm font-medium text-brown-700 mb-2">
-                          Note (Optional)
-                        </label>
-                        <textarea
-                          value={editingMood.note || ""}
-                          onChange={(e) =>
-                            setEditingMood((prev) => ({
-                              ...prev,
-                              note: e.target.value,
-                            }))
-                          }
-                          placeholder="What's on your mind?"
-                          className="input-field h-20 resize-none"
-                        />
-                      </div>
-
-                      {tagGroups.map((group) => (
-                        <div key={group.id}>
-                          <label className="block text-sm font-medium text-brown-700 mb-2">
-                            {group.name}
-                          </label>
-                          <div className="flex flex-wrap gap-2">
-                            {group.tags.map((tag) => (
-                              <button
-                                key={typeof tag === "string" ? tag : tag.id}
-                                type="button"
-                                onClick={() =>
-                                  handleTagToggle(
-                                    typeof tag === "string" ? tag : tag.name
-                                  )
-                                }
-                                className={`tag-item transition-all ${
-                                  editingMood.tags?.includes(
-                                    typeof tag === "string" ? tag : tag.name
-                                  )
-                                    ? "bg-brown-600 text-white border-brown-600"
-                                    : `${group.color} hover:bg-opacity-80`
-                                }`}
+                        <h4 className="font-medium text-brown-800">
+                          {getMoodLabel(mood.rating)}
+                        </h4>
+                        <p className="text-brown-600 text-sm flex items-center">
+                          <Clock className="w-4 h-4 mr-1" />
+                          {new Date(
+                            mood.date || mood.createdAt
+                          ).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </p>
+                        {mood.note && (
+                          <p className="text-brown-700 text-sm mt-2 bg-white p-2 rounded">
+                            &quot;{mood.note}&quot;
+                          </p>
+                        )}
+                        {mood.tags && mood.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {mood.tags.map((tag, tagIndex) => (
+                              <span
+                                key={tagIndex}
+                                className="text-xs bg-brown-200 text-brown-700 px-2 py-1 rounded"
                               >
-                                {typeof tag === "string" ? tag : tag.name}
-                              </button>
+                                {tag}
+                              </span>
                             ))}
                           </div>
-                        </div>
-                      ))}
-
-                      <div className="flex space-x-3">
-                        <Button variant="primary" onClick={handleUpdateMood}>
-                          Save Changes
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          onClick={() => setEditingMood(null)}
-                        >
-                          Cancel
-                        </Button>
+                        )}
                       </div>
                     </div>
-                  ) : (
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-3">
-                        <div className="text-2xl">
-                          {getMoodEmoji(mood.rating)}
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-brown-800">
-                            {getMoodLabel(mood.rating)}
-                          </h4>
-                          <p className="text-brown-600 text-sm flex items-center">
-                            <Clock className="w-4 h-4 mr-1" />
-                            {new Date(
-                              mood.date || mood.createdAt
-                            ).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </p>
-                          {mood.note && (
-                            <p className="text-brown-700 text-sm mt-2 bg-white p-2 rounded">
-                              &quot;{mood.note}&quot;
-                            </p>
-                          )}
-                          {mood.tags && mood.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-2">
-                              {mood.tags.map((tag, tagIndex) => (
-                                <span
-                                  key={tagIndex}
-                                  className="text-xs bg-brown-200 text-brown-700 px-2 py-1 rounded"
-                                >
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          onClick={() => setEditingMood(mood)}
-                          variant="ghost"
-                        >
-                          <Edit3 className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          onClick={() => handleDeleteMood(mood.id)}
-                          variant="destructive"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        onClick={() => handleEditMood(mood.id)}
+                        variant="ghost"
+                        aria-label="Edit Mood"
+                      >
+                        <Edit3 className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        onClick={() => handleDeleteMood(mood.id)}
+                        variant="destructive"
+                        aria-label="Delete Mood"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
-                  )}
+                  </div>
                 </div>
               ))}
             </div>

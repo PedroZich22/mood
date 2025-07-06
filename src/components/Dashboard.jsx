@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Plus,
   Zap,
@@ -16,48 +16,24 @@ import { Button } from "./ui/Button";
 import { StatCard } from "./ui/StatCard";
 import Calendar from "./Calendar";
 import MoodList from "./MoodList";
-import DayMoodModal from "./DayMoodModal";
 import { getMoodEmoji, MOOD_CONFIG } from "../config/mood";
 import { PageHeader } from "./ui/PageHeader";
 
 const Dashboard = () => {
-  const { user } = useAuth();
-  const { moods, updateMood, deleteMood, isLoading } = useMoods();
-  const stats = useStats(moods);
   const [viewMode, setViewMode] = useState("calendar");
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [dayMoods, setDayMoods] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleDateSelect = (date, moodsForDay) => {
-    setSelectedDate(date);
-    setDayMoods(moodsForDay);
-    setIsModalOpen(true);
-  };
+  const { user } = useAuth();
+  const { moods, deleteMood, isLoading, fetchMoods } = useMoods();
+  const stats = useStats(moods);
+  const navigate = useNavigate();
 
-  const handleUpdateMood = async (id, moodData) => {
-    await updateMood(id, moodData);
-    if (selectedDate) {
-      const updatedDayMoods = moods.filter((mood) => {
-        const moodDate = new Date(mood.date || mood.createdAt);
-        return moodDate.toDateString() === selectedDate.toDateString();
-      });
-      setDayMoods(updatedDayMoods);
-    }
+  const handleEditMood = async (id) => {
+    navigate(`/mood/${id}`);
   };
 
   const handleDeleteMood = async (id) => {
     await deleteMood(id);
-    if (selectedDate) {
-      const updatedDayMoods = moods.filter((mood) => {
-        const moodDate = new Date(mood.date || mood.createdAt);
-        return (
-          moodDate.toDateString() === selectedDate.toDateString() &&
-          mood.id !== id
-        );
-      });
-      setDayMoods(updatedDayMoods);
-    }
+    await fetchMoods();
   };
 
   if (isLoading) {
@@ -157,8 +133,8 @@ const Dashboard = () => {
       {viewMode === "calendar" ? (
         <Calendar
           moods={moods}
-          onDateSelect={handleDateSelect}
-          selectedDate={selectedDate}
+          onEditMood={handleEditMood}
+          onDeleteMood={handleDeleteMood}
         />
       ) : (
         <MoodList
@@ -167,15 +143,6 @@ const Dashboard = () => {
           onDeleteMood={handleDeleteMood}
         />
       )}
-
-      <DayMoodModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        selectedDate={selectedDate}
-        dayMoods={dayMoods}
-        onUpdateMood={handleUpdateMood}
-        onDeleteMood={handleDeleteMood}
-      />
     </div>
   );
 };
