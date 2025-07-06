@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { Badge } from "./Badge";
+import DynamicLucideIcon from "./DynamicIcon.jsx";
 
 const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
   const [expandedGroups, setExpandedGroups] = useState(new Set());
@@ -24,6 +25,7 @@ const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
     );
   }
 
+
   return (
     <div className={cn("space-y-3", className)}>
       {/* Selected Tags */}
@@ -35,7 +37,8 @@ const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
               className="bg-brown-600 text-white cursor-pointer group"
               onClick={() => onTagToggle(tag)}
             >
-              <span>{tag}</span>
+              <DynamicLucideIcon name={tag.icon} size={20} />
+              <span>{tag.name}</span>
               <X className="w-3 h-3 ml-1 opacity-70 group-hover:opacity-100" />
             </Badge>
           ))}
@@ -57,7 +60,7 @@ const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
                 onClick={() => toggleGroup(group.id)}
                 className="w-full p-3 flex items-center justify-between bg-white hover:bg-brown-50 transition-colors"
               >
-                <span className="font-medium text-brown-800">{group.name}</span>
+                <span className="font-medium text-brown-800">{group.group_name}</span>
                 <ChevronDown
                   className={cn(
                     "w-4 h-4 text-brown-600 transition-transform duration-200",
@@ -71,20 +74,22 @@ const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
                   <div className="flex flex-wrap gap-2">
                     {group.tags.map((tag, tagIndex) => {
                       const tagName = typeof tag === "string" ? tag : tag.name;
-                      const isSelected = selectedTags.includes(tagName);
+                      const icon = typeof tag === "string" ? tag: tag.icon;
+                      const isSelected = selectedTags.includes(tag);
 
                       return (
                         <button
                           key={tagIndex}
                           type="button"
-                          onClick={() => onTagToggle(tagName)}
+                          onClick={() => onTagToggle(tag)}
                           className={cn(
-                            "px-3 py-1 rounded-full text-sm transition-all duration-200 border",
+                            "flex items-center gap-2 px-3 py-1 rounded-full text-sm transition-all duration-200 border",
                             isSelected
                               ? "bg-brown-600 text-white border-brown-600"
                               : "bg-white text-brown-700 border-brown-300 hover:border-brown-500"
                           )}
                         >
+                          <DynamicLucideIcon name={icon} size={20}/>
                           {tagName}
                         </button>
                       );
