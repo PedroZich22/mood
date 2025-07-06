@@ -9,7 +9,6 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  Legend,
 } from "recharts";
 import { Calendar, BarChart2 } from "lucide-react";
 import { useAnalytics } from "../hooks/useAnalytics";
