@@ -22,7 +22,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2 mb-4">
+            <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-brown-600 rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white" />
               </div>
@@ -51,9 +51,9 @@ const Navbar = () => {
 
             <div className="flex items-center space-x-4">
               <Link
-                to={"/user"}
+                to={"/profile"}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors duration-200 ${
-                  isActive("/user")
+                  isActive("/profile")
                     ? "bg-brown-100 text-brown-800"
                     : "text-brown-600 hover:text-brown-800 hover:bg-brown-50"
                 }`}
@@ -115,9 +115,9 @@ const Navbar = () => {
             })}
             <div className="border-t border-brown-200 pt-4">
               <Link
-                to={"/user"}
+                to={"/profile"}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors duration-200 ${
-                  isActive("/user")
+                  isActive("/profile")
                     ? "bg-brown-100 text-brown-800"
                     : "text-brown-600 hover:text-brown-800 hover:bg-brown-50"
                 }`}

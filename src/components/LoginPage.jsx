@@ -53,7 +53,7 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-brown-700 mb-2">
-                Endereço de e-mail
+                E-mail
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-5 w-5 text-brown-400 pointer-events-none" />
