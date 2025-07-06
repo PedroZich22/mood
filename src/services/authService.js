@@ -3,7 +3,8 @@ import apiClient from "../config/api";
 export const authService = {
   register: async (userData) => {
     try {
-      await apiClient.post("/auth/register", userData);
+      const response = await apiClient.post("/auth/register", userData);
+      return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || "Registration failed");
     }
@@ -12,8 +13,7 @@ export const authService = {
   login: async (credentials) => {
     try {
       const response = await apiClient.post("/auth/login", credentials);
-      const { token } = response.data;
-      return { token };
+      return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || "Login failed");
     }
