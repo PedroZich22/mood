@@ -16,9 +16,6 @@ const Profile = () => {
   const [profileData, setProfileData] = useState({
     name: user.name || "",
     email: user.email || "",
-    notifications: true,
-    privacy: "private",
-    theme: "brown",
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -50,11 +47,8 @@ const Profile = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setProfileData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    const { name, value } = e.target;
+    setProfileData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleDeleteAccount = async () => {
