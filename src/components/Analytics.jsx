@@ -164,7 +164,6 @@ const Analytics = () => {
                   <XAxis dataKey="rating" />
                   <YAxis />
                   <Tooltip />
-                  <Legend content={} />
                   <Bar dataKey="count" fill="#8b6f47" />
                 </BarChart>
               </ResponsiveContainer>
