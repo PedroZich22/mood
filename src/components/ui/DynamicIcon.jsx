@@ -1,26 +1,29 @@
-// src/components/DynamicLucideIcon.jsx
-import { lazy, Suspense } from 'react';
-// Função para converter 'kebab-case' para 'PascalCase'
-// Ex: 'activity-heart' -> 'ActivityHeart'
+import { lazy, Suspense } from "react";
 
 const kebabToPascalCase = (name) => {
-    return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
+  return name
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join("");
 };
 
 const DynamicLucideIcon = ({ name, ...props }) => {
-    const IconComponent = lazy(() =>
-        import('lucide-react').then(module => {
-            const ComponentName = kebabToPascalCase(name);
-            // Retorna um objeto no formato que React.lazy espera: { default: Component }
-            return { default: module[ComponentName] || module['AlertCircle'] }; // 'AlertCircle' como fallback
-        })
-    );
+  const IconComponent = lazy(() =>
+    import("lucide-react").then((module) => {
+      const ComponentName = kebabToPascalCase(name);
+      return { default: module[ComponentName] || module["AlertCircle"] };
+    })
+  );
 
-    return (
-        <Suspense fallback={<div style={{ width: props.size || 24, height: props.size || 24 }} />}>
-            <IconComponent {...props} />
-        </Suspense>
-    );
+  return (
+    <Suspense
+      fallback={
+        <div style={{ width: props.size || 24, height: props.size || 24 }} />
+      }
+    >
+      <IconComponent {...props} />
+    </Suspense>
+  );
 };
 
 export default DynamicLucideIcon;

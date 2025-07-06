@@ -1,12 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  Heart,
-  BarChart3,
-  Shield,
-  ArrowRight,
-  ArrowBigDown,
-  ArrowDown,
-} from "lucide-react";
+import { Heart, BarChart3, Shield, ArrowRight, ArrowDown } from "lucide-react";
 import { Card } from "./ui/Card";
 import { getMoodEmoji, MOOD_CONFIG } from "../config/mood";
 
@@ -125,27 +118,6 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-
-      {/* Seção Cadastro 2 */}
-      {/* <section className="py-20 px-4 bg-brown-600">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-8">
-            <h2
-              className="text-4xl md:text-5xl font-bold text-white mb-4"
-              style={{ fontFamily: "Noto Serif, serif" }}
-            >
-              Pronto para começar sua jornada emocional?
-            </h2>
-            <p className="text-xl text-brown-100 mb-8 font-light max-w-2xl mx-auto">
-              Junte-se a milhares de pessoas que estão se conectando com seus sentimentos e cultivando o bem-estar emocional através do autoconhecimento.
-            </p>
-            <Link to="/register" className="btn btn-secondary space-x-2">
-              <span>Comece Gratuitamente</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-        </div>
-      </section> */}
 
       {/* Footer */}
       <footer className="bg-brown-800 text-brown-100 py-12 px-4">

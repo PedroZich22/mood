@@ -16,9 +16,12 @@ import Analytics from "./components/Analytics";
 import Profile from "./components/Profile";
 import Navbar from "./components/Navbar";
 import "./index.css";
+import { LoadingPage } from "./components/LoadingPage";
 
 function ProtectedLayout() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingPage />;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   return (
     <>
@@ -29,7 +32,9 @@ function ProtectedLayout() {
 }
 
 function PublicLayout() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingPage />;
   if (isAuthenticated) return <Navigate to="/dashboard" replace />;
   return <Outlet />;
 }
