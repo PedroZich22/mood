@@ -10,7 +10,7 @@ import { formatDate } from "../utils/date";
 import { Pencil, Save, UserCircle } from "lucide-react";
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { profile, updateProfile, deleteAccount, isLoading } = useProfile();
   const { showSuccess, showError } = useToast();
   const [profileData, setProfileData] = useState({
@@ -36,8 +36,8 @@ const Profile = () => {
         name: profileData.name,
         email: profileData.email,
       });
-
-      showSuccess("Profile updated successfully!");
+      
+      showSuccess("Conta atualizada com sucesso!");
       setIsEditing(false);
     } catch (error) {
       showError(error);
@@ -54,14 +54,15 @@ const Profile = () => {
   const handleDeleteAccount = async () => {
     if (
       !confirm(
-        "Are you sure you want to delete your account? This action cannot be undone."
+        "Você realmente quer deletar sua conta? Essa ação não poderá ser desfeita"
       )
     )
       return;
 
     try {
       await deleteAccount();
-      showSuccess("Account deleted successfully!");
+      await logout();
+      showSuccess("Conta deletada com sucesso!");
     } catch (error) {
       showError(error);
     }
@@ -109,7 +110,7 @@ const Profile = () => {
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-brown-600">Member since:</span>
+                <span className="text-brown-600">Membro desde:</span>
                 <span className="text-brown-800">
                   {profile?.createdAt && formatDate(profile.createdAt)}
                 </span>
@@ -121,7 +122,7 @@ const Profile = () => {
         <div className="lg:col-span-2">
           <Card>
             <CardHeader className="items-center justify-between">
-              <CardTitle>Account Settings</CardTitle>
+              <CardTitle>Configurações da conta</CardTitle>
               {isEditing ? (
                 <div className="flex items-center justify-between gap-2">
                   <Button
@@ -129,7 +130,7 @@ const Profile = () => {
                     onClick={() => setIsEditing(false)}
                     size="sm"
                   >
-                    Cancel
+                    Cancelar
                   </Button>
                   <Button
                     onClick={handleSave}
@@ -144,7 +145,7 @@ const Profile = () => {
               ) : (
                 <Button onClick={() => setIsEditing(true)} size="sm">
                   <Pencil size={16} className="mr-2" />
-                  Edit Profile
+                  Editar perfil
                 </Button>
               )}
             </CardHeader>
@@ -153,7 +154,7 @@ const Profile = () => {
                 <div className="flex flex-col gap-4">
                   <div>
                     <label className="block text-sm font-medium text-brown-700 mb-2">
-                      Full Name
+                      Nome completo
                     </label>
                     <Input
                       type="text"
@@ -166,7 +167,7 @@ const Profile = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-brown-700 mb-2">
-                      Email Address
+                      Endereço de e-mail
                     </label>
                     <Input
                       type="email"
@@ -184,15 +185,15 @@ const Profile = () => {
 
           <Card className="mt-6">
             <CardHeader>
-              <CardTitle>Data Management</CardTitle>
+              <CardTitle>Gerenciamento de Dados</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-medium text-red-700">Delete Account</h3>
+                    <h3 className="font-medium text-red-700">Deletar conta</h3>
                     <p className="text-sm text-brown-600">
-                      Permanently delete your account and all data
+                      Delete sua conta permanentemente
                     </p>
                   </div>
                   <Button
@@ -200,7 +201,7 @@ const Profile = () => {
                     onClick={handleDeleteAccount}
                     size="sm"
                   >
-                    Delete
+                    Deletar
                   </Button>
                 </div>
               </div>

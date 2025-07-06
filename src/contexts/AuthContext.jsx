@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { authService } from "../services/authService";
+import { userService } from "../services/userService";
 
 const AuthContext = createContext();
 
@@ -65,9 +66,9 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await authService.logout();
+      await userService.logout();
     } catch (error) {
-      console.error("Logout error:", error);
+      console.error("Erro no logout:", error);
     } finally {
       setUser(null);
     }
