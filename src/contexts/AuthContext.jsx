@@ -40,9 +40,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(true);
       setError(null);
       const { token, user } = await authService.login(credentials);
-
       localStorage.setItem("authToken", token);
-
       setUser(user);
     } catch (error) {
       setError(error.message);
@@ -56,7 +54,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       setError(null);
-      authService.register(userData);
+      await authService.register(userData);
     } catch (error) {
       setError(error.message);
       throw error;
