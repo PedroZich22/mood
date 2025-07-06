@@ -4,8 +4,11 @@ import {
   BarChart3,
   Shield,
   ArrowRight,
+  ArrowBigDown,
+  ArrowDown,
 } from "lucide-react";
 import { Card } from "./ui/Card";
+import { getMoodEmoji, MOOD_CONFIG } from "../config/mood";
 
 const LandingPage = () => {
   const features = [
@@ -29,21 +32,19 @@ const LandingPage = () => {
     },
   ];
 
-
   return (
     <div className="min-h-screen">
-      {/* Seção primera */}
-      <section className="relative overflow-hidden py-20 px-4">
+      <section className="relative overflow-hidden py-20 px-4 h-screen flex items-center justify-center bg-gradient-to-br from-cream-50 to-brown-50">
         <div className="max-w-6xl mx-auto">
-          <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-br from-brown-200 to-brown-300 rounded-full opacity-20 animate-bounce-subtle"></div>
+          <div className="absolute top-20 left-20 w-20 h-20 bg-gradient-to-br from-brown-200 to-brown-300 rounded-full opacity-20 animate-bounce" />
           <div
-            className="absolute top-40 right-20 w-16 h-16 bg-gradient-to-br from-cream-200 to-cream-300 rounded-full opacity-30 animate-bounce-subtle"
+            className="absolute top-40 right-20 w-16 h-16 bg-gradient-to-br from-cream-200 to-cream-300 rounded-full opacity-30 animate-bounce"
             style={{ animationDelay: "0.5s" }}
-          ></div>
+          />
           <div
-            className="absolute bottom-20 left-1/4 w-12 h-12 bg-gradient-to-br from-sage-200 to-sage-300 rounded-full opacity-25 animate-bounce-subtle"
+            className="absolute bottom-20 left-1/4 w-12 h-12 bg-gradient-to-br from-sage-200 to-sage-300 rounded-full opacity-25 animate-bounce"
             style={{ animationDelay: "1s" }}
-          ></div>
+          />
 
           <div className="text-center relative z-10">
             <div className="mb-8">
@@ -56,11 +57,13 @@ const LandingPage = () => {
               </h1>
 
               <p className="text-xl md:text-2xl text-brown-600 mb-8 max-w-3xl mx-auto font-light leading-relaxed">
-                Registre seus humores diários, descubra padrões e desenvolva hábitos emocionais mais saudáveis com nosso aplicativo intuitivo e bonito.
+                Registre seus humores diários, descubra padrões e desenvolva
+                hábitos emocionais mais saudáveis com nosso aplicativo intuitivo
+                e bonito.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Link to="/register" className="btn btn-primary space-x-2">
                 <span>Comece sua Jornada</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -70,36 +73,38 @@ const LandingPage = () => {
               </Link>
             </div>
 
-            {/* Emojis */}
-            <div className="flex justify-center space-x-6 opacity-70">
-              <div className="text-5xl animate-bounce-subtle">😢</div>
-              <div
-                className="text-5xl animate-bounce-subtle"
-                style={{ animationDelay: "0.2s" }}
-              >
-                😐
-              </div>
-              <div
-                className="text-5xl animate-bounce-subtle"
-                style={{ animationDelay: "0.4s" }}
-              >
-                😊
-              </div>
-              <div
-                className="text-5xl animate-bounce-subtle"
-                style={{ animationDelay: "0.6s" }}
-              >
-                😄
-              </div>
+            <div className="flex justify-center items-center space-x-6 opacity-70">
+              {Object.keys(MOOD_CONFIG.emojis).map((emoji, index) => (
+                <div
+                  key={index}
+                  className="text-5xl animate-bounce"
+                  style={{ animationDelay: `${index * 0.2}s` }}
+                >
+                  {getMoodEmoji(emoji)}
+                </div>
+              ))}
             </div>
+          </div>
+
+          <div>
+            <ArrowDown className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-8 h-8 text-brown-600 animate-bounce" />
           </div>
         </div>
       </section>
 
-      {/* Seção de Funcionalidades */}
-      <section className="pt-12 pb-16 px-4">
+      <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
-          {/* Lista de funcionalidades */}
+          <div className="text-center mb-16">
+            <h2 className="heading-lg mb-4">
+              Tudo que você precisa para acompanhar seu humor
+            </h2>
+            <p className="text-lg text-brown-600 max-w-2xl mx-auto font-light">
+              Nosso aplicativo combina simplicidade com insights poderosos para
+              ajudá-lo a entender seus padrões emocionais e construir melhores
+              hábitos.
+            </p>
+          </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <Card
@@ -141,7 +146,6 @@ const LandingPage = () => {
           </div>
         </div>
       </section> */}
-
 
       {/* Footer */}
       <footer className="bg-brown-800 text-brown-100 py-12 px-4">
