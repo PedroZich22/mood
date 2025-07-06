@@ -1,4 +1,4 @@
-import { cn } from "../../utils/cn";
+import { Card, CardContent, CardHeader } from "./Card";
 
 const FormSection = ({
   icon: Icon,
@@ -9,13 +9,8 @@ const FormSection = ({
   required = false,
 }) => {
   return (
-    <div
-      className={cn(
-        "bg-white rounded-xl border border-cream-200 p-6 transition-all duration-200",
-        className
-      )}
-    >
-      <div className="flex items-center space-x-3 mb-4">
+    <Card className={className}>
+      <CardHeader className="items-center space-x-3">
         {Icon && (
           <div className="w-10 h-10 rounded-full flex items-center justify-center transition-colors bg-brown-100 text-brown-600">
             <Icon className="w-5 h-5" />
@@ -30,9 +25,9 @@ const FormSection = ({
             <p className="text-brown-600 text-sm">{description}</p>
           )}
         </div>
-      </div>
-      {children}
-    </div>
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+    </Card>
   );
 };
 

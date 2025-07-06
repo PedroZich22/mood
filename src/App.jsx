@@ -49,7 +49,8 @@ function App() {
 
               <Route element={<ProtectedLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/mood" element={<MoodTracker />} />
+                <Route path="/mood/" element={<MoodTracker />} />
+                <Route path="/mood/:id" element={<MoodTracker />} />
                 <Route path="/analytics" element={<Analytics />} />
                 <Route path="/profile" element={<Profile />} />
               </Route>

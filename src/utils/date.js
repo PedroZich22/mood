@@ -1,5 +1,5 @@
 export const formatDate = (date, options = {}) => {
-  return new Date(date).toLocaleDateString("en-US", options);
+  return new Date(date).toLocaleDateString("pt-BR", options);
 };
 
 export const formatTime = (date) => {

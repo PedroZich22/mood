@@ -10,7 +10,7 @@ export const moodService = {
     }
   },
 
-  getMood: async (id) => {
+  getMoodById: async (id) => {
     try {
       const response = await apiClient.get(`/moods/${id}`);
       return response.data;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { moodService } from "../services/moodService";
 
 export const useMoods = (params = {}) => {
@@ -24,6 +24,16 @@ export const useMoods = (params = {}) => {
     }
   };
 
+  const getMoodById = async (id) => {
+    try {
+      const mood = await moodService.getMoodById(id);
+      return mood;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
+  };
+
   const createMood = async (moodData) => {
     try {
       const newMood = await moodService.createMood(moodData);
@@ -39,7 +49,7 @@ export const useMoods = (params = {}) => {
     try {
       const updatedMood = await moodService.updateMood(id, moodData);
       setMoods((prev) =>
-        prev.map((mood) => (mood.id === id ? updatedMood : mood)),
+        prev.map((mood) => (mood.id === id ? updatedMood : mood))
       );
       return updatedMood;
     } catch (error) {
@@ -59,17 +69,14 @@ export const useMoods = (params = {}) => {
     }
   };
 
-  const refreshMoods = () => {
-    fetchMoods();
-  };
-
   return {
     moods,
     isLoading,
     error,
+    getMoodById,
     createMood,
     updateMood,
     deleteMood,
-    refreshMoods,
+    fetchMoods,
   };
 };

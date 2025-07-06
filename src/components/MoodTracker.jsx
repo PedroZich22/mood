@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Save, Heart, Tag, FileText } from "lucide-react";
-import { useMoods } from "../hooks/useMoods";
 import { useTagGroups } from "../hooks/useTagGroups";
 import { useToast } from "../contexts/ToastContext";
 import { isDateInFuture } from "../utils/date";
@@ -12,6 +11,7 @@ import { MoodSelector } from "./ui/MoodSelector";
 import { TagSelector } from "./ui/TagSelector";
 import { Textarea } from "./ui/Textarea";
 import { PageHeader } from "./ui/PageHeader";
+import { moodService } from "../services/moodService";
 
 const MoodTracker = () => {
   const [selectedMood, setSelectedMood] = useState(null);
@@ -21,12 +21,21 @@ const MoodTracker = () => {
     new Date().toISOString().split("T")[0]
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
-  const { createMood } = useMoods();
   const { tagGroups, isLoading: tagsLoading } = useTagGroups();
   const { showSuccess, showError } = useToast();
+
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { id: moodId } = useParams();
+
+  const isEditMode = !!moodId;
+
+  useEffect(() => {
+    if (moodId) {
+      loadMoodForEditing(moodId);
+    }
+  }, [moodId]);
 
   useEffect(() => {
     const dateParam = searchParams.get("date");
@@ -34,6 +43,27 @@ const MoodTracker = () => {
       setSelectedDate(dateParam);
     }
   }, [searchParams]);
+
+  const loadMoodForEditing = async (id) => {
+    try {
+      const mood = await moodService.getMoodById(id);
+
+      if (mood) {
+        setSelectedMood(mood.rating);
+        setNote(mood.note || "");
+        setSelectedTags(mood.tags || []);
+        setSelectedDate(
+          new Date(mood.date || mood.createdAt).toISOString().split("T")[0]
+        );
+      } else {
+        showError("Mood entry not found");
+        navigate("/dashboard");
+      }
+    } catch {
+      showError("Failed to load mood entry");
+      navigate("/dashboard");
+    }
+  };
 
   const handleTagToggle = (tag) => {
     setSelectedTags((prev) =>
@@ -63,8 +93,14 @@ const MoodTracker = () => {
         date: new Date(selectedDate).toISOString(),
       };
 
-      await createMood(moodEntry);
-      showSuccess("Mood entry saved successfully! 🎉");
+      if (isEditMode) {
+        await moodService.updateMood(moodId, moodEntry);
+        showSuccess("Mood entry updated successfully! ✨");
+      } else {
+        await moodService.createMood(moodEntry);
+        showSuccess("Mood entry saved successfully! 🎉");
+      }
+
       navigate("/dashboard");
     } catch {
       showError("Failed to save mood entry");
@@ -104,14 +140,10 @@ const MoodTracker = () => {
         <FormSection
           icon={Heart}
           title="Mood Rating"
-          description="How are you feeling? (1-5 scale)"
+          description="How are you feeling?"
           required
         >
-          <MoodSelector
-            value={selectedMood}
-            onChange={setSelectedMood}
-            variant="buttons"
-          />
+          <MoodSelector value={selectedMood} onChange={setSelectedMood} />
         </FormSection>
 
         <FormSection
