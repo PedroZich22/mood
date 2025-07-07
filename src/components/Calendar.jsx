@@ -76,20 +76,19 @@ const Calendar = ({ moods, onEditMood, onDeleteMood }) => {
                 key={index}
                 onClick={() => handleDateClick(day)}
                 disabled={isDateInFuture(day.date) || !day.isCurrentMonth}
-                className={`
-              flex items-start justify-start relative p-2 h-16 border border-brown-100 bg-white rounded-lg transition-all duration-200 cursor-pointer
-              hover:bg-brown-50 disabled:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-400
-              ${day.isToday ? "ring-2 ring-brown-400" : ""}
-              ${
-                selectedDate &&
-                selectedDate.toDateString() === day.date.toDateString()
-                  ? "ring-2 ring-brown-600 bg-brown-50"
-                  : ""
-              }
-              ${getMoodCalendarColor(day.averageMood)}
-              `}
+                className={`flex items-start justify-start relative p-2 h-16 border border-brown-100 rounded-lg transition-all duration-200 cursor-pointer
+                  hover:bg-brown-50 disabled:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-400
+                  ${day.isToday ? "ring-2 ring-brown-400" : ""}
+                  ${
+                    selectedDate &&
+                    selectedDate.toDateString() === day.date.toDateString()
+                      ? "ring-2 ring-brown-600 bg-brown-50"
+                      : ""
+                  }
+                  ${getMoodCalendarColor(day.averageMood) || "bg-white"}
+                `}
               >
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full w-full">
                   <span className="text-sm font-medium">
                     {day.date.getDate()}
                   </span>

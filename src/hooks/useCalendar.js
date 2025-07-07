@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 
 export const useCalendar = (moods) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-
+  console.log('moods', moods)
   const calendarDays = useMemo(() => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
@@ -28,8 +28,7 @@ export const useCalendar = (moods) => {
         moods: dayMoods,
         averageMood:
           dayMoods.length > 0
-            ? dayMoods.reduce((sum, mood) => sum + mood.rating, 0) /
-              dayMoods.length
+            ? dayMoods.reduce((sum, mood) => sum + Number(mood.rating), 0) / dayMoods.length
             : null,
       });
 

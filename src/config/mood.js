@@ -46,7 +46,7 @@ export const getMoodDescription = (rating) =>
   MOOD_CONFIG.descriptions[rating] || "";
 export const getMoodColor = (rating) => MOOD_CONFIG.colors[rating] || "";
 export const getMoodCalendarColor = (averageMood) => {
-  if (!averageMood) return "bg-gray-100";
-  const rating = Math.round(averageMood);
-  return MOOD_CONFIG.calendarColors[rating] || "bg-gray-100";
+  if (!averageMood || isNaN(averageMood)) return "bg-gray-100";
+  const rating = Math.round(Number(averageMood));
+  return MOOD_CONFIG.calendarColors[rating];
 };
