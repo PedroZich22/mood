@@ -3,7 +3,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Save, Heart, Tag, FileText } from "lucide-react";
 import { useTagGroups } from "../hooks/useTagGroups";
 import { useToast } from "../contexts/ToastContext";
-import { isDateInFuture, formatDateTimeIso, getCurrentLocalDateString, getCurrentLocalTimeString } from "../utils/date";
+import { isDateInFuture, formatDateTimeIso, getLocalDateString, getLocalTimeString } from "../utils/date";
 import { Button } from "./ui/Button";
 import { FormSection } from "./ui/FormSection";
 import { DatePicker } from "./ui/DatePicker";
@@ -17,8 +17,8 @@ const MoodTracker = () => {
   const [selectedMood, setSelectedMood] = useState(null);
   const [note, setNote] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(getCurrentLocalDateString());
-  const [selectedTime, setSelectedTime] = useState(getCurrentLocalTimeString());
+  const [selectedDate, setSelectedDate] = useState(getLocalDateString());
+  const [selectedTime, setSelectedTime] = useState(getLocalTimeString());
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { tagGroups, isLoading: tagsLoading } = useTagGroups();
@@ -38,6 +38,7 @@ const MoodTracker = () => {
 
   useEffect(() => {
     const dateParam = searchParams.get("date");
+    console.log(searchParams)
     if (dateParam) {
       setSelectedDate(dateParam);
     }
@@ -52,12 +53,8 @@ const MoodTracker = () => {
         setNote(mood.note || "");
         setSelectedTags(mood.tags || []);
         const moodDate = new Date(mood.date || mood.createdAt);
-        setSelectedDate(moodDate.toISOString().split("T")[0]);
-        setSelectedTime(
-          moodDate.getHours().toString().padStart(2, "0") + 
-          ":" + 
-          moodDate.getMinutes().toString().padStart(2, "0")
-        );
+        setSelectedDate(getLocalDateString(moodDate));
+        setSelectedTime(getLocalTimeString(moodDate));
       } else {
         showError("Registro de humor não encontrado");
         navigate("/dashboard");
