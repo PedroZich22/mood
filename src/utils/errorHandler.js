@@ -6,27 +6,27 @@ export const handleApiError = (error) => {
 
     switch (status) {
       case 400:
-        return data.message || "Invalid request. Please check your input.";
+        return data.message || "Solicitação inválida. Por favor, verifique sua entrada.";
       case 401:
-        return "You are not authorized. Please log in again.";
+        return "Você não está autorizado. Por favor, faça login novamente.";
       case 403:
-        return "You do not have permission to perform this action.";
+        return "Você não tem permissão para realizar esta ação.";
       case 404:
-        return "The requested resource was not found.";
+        return "O recurso solicitado não foi encontrado.";
       case 422:
-        return data.message || "Validation error. Please check your input.";
+        return data.message || "Erro de validação. Por favor, verifique sua entrada.";
       case 429:
-        return "Too many requests. Please try again later.";
+        return "Muitas solicitações. Por favor, tente novamente mais tarde.";
       case 500:
-        return "Server error. Please try again later.";
+        return "Erro do servidor. Por favor, tente novamente mais tarde.";
       default:
-        return data.message || "An unexpected error occurred.";
+        return data.message || "Ocorreu um erro inesperado.";
     }
   } else if (error.request) {
     // Network error
-    return "Network error. Please check your internet connection.";
+    return "Erro de rede. Por favor, verifique sua conexão com a internet.";
   } else {
     // Other error
-    return error.message || "An unexpected error occurred.";
+    return error.message || "Ocorreu um erro inesperado.";
   }
 };

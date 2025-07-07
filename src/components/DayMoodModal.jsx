@@ -20,13 +20,13 @@ const DayMoodModal = ({
   };
 
   const handleDeleteMood = async (moodId) => {
-    if (!confirm("Are you sure you want to delete this mood entry?")) return;
+    if (!confirm("Tem certeza que deseja excluir este registro de humor?")) return;
 
     try {
       await onDeleteMood(moodId);
-      showSuccess("Mood entry deleted successfully!");
+      showSuccess("Registro de humor excluído com sucesso!");
     } catch {
-      showError("Failed to delete mood entry");
+      showError("Falha ao excluir registro de humor");
     }
   };
 
@@ -40,11 +40,11 @@ const DayMoodModal = ({
             <div>
               <h2 className="heading-md mb-1">{formatDate(selectedDate)}</h2>
               <p className="text-brown-600 text-sm">
-                {dayMoods.length} mood{" "}
-                {dayMoods.length === 1 ? "entry" : "entries"}
+                {dayMoods.length} registro{" "}
+                {dayMoods.length === 1 ? "de humor" : "de humor"}
               </p>
             </div>
-            <Button variant="ghost" onClick={onClose} aria-label="Close Modal">
+            <Button variant="ghost" onClick={onClose} aria-label="Fechar Modal">
               <X className="w-5 h-5 text-brown-600" />
             </Button>
           </div>
@@ -53,7 +53,7 @@ const DayMoodModal = ({
         <div className="p-6">
           {dayMoods.length > 0 ? (
             <div className="space-y-4 mb-6">
-              <h3 className="font-semibold text-brown-800">Mood Entries</h3>
+              <h3 className="font-semibold text-brown-800">Registros de Humor</h3>
               {dayMoods.map((mood, index) => (
                 <MoodItem
                   mood={mood}
@@ -67,7 +67,7 @@ const DayMoodModal = ({
             <div className="text-center py-8 mb-6">
               <div className="text-6xl mb-4">📝</div>
               <p className="text-brown-600 font-light mb-4">
-                No mood entries for this day
+                Nenhum registro de humor para este dia
               </p>
             </div>
           )}
@@ -80,7 +80,7 @@ const DayMoodModal = ({
                 className="w-full p-4 border-2 border-dashed border-brown-300 rounded-lg text-brown-600 hover:border-brown-400 hover:bg-brown-50 transition-colors flex items-center justify-center space-x-2 no-underline"
               >
                 <Plus className="w-5 h-5" />
-                <span>Add New Mood Entry for This Day</span>
+                <span>Adicionar Novo Registro de Humor para Este Dia</span>
               </Link>
             </div>
           )}

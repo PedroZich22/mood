@@ -40,13 +40,13 @@ const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
   return (
     <Card>
       <CardHeader className="items-center justify-between">
-        <CardTitle>History</CardTitle>
+        <CardTitle>Histórico</CardTitle>
         <div className="flex items-center space-x-3">
           <div className="relative w-full">
             <Search className="absolute left-3 top-3 h-4 w-4 text-brown-400" />
             <Input
               type="text"
-              placeholder="Search moods..."
+              placeholder="Buscar humores..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 w-48 text-sm py-2"
@@ -57,7 +57,7 @@ const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
             onChange={(e) => setFilterRating(e.target.value)}
             className="text-sm py-2 w-32"
           >
-            <option value="all">All Moods</option>
+            <option value="all">Todos os Humores</option>
             {Object.entries(MOOD_CONFIG.emojis).map(([rating, emoji]) => (
               <option key={rating} value={rating}>
                 {emoji} {getMoodLabel(rating)}
@@ -69,8 +69,8 @@ const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
             onChange={(e) => setSortBy(e.target.value)}
             className="text-sm py-2 w-32"
           >
-            <option value="date">By Date</option>
-            <option value="rating">By Rating</option>
+            <option value="date">Por Data</option>
+            <option value="rating">Por Avaliação</option>
           </Select>
         </div>
       </CardHeader>
@@ -81,8 +81,8 @@ const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
             <div className="text-6xl mb-4">📝</div>
             <p className="text-brown-600 font-light mb-4">
               {searchTerm || filterRating !== "all"
-                ? "No moods match your filters"
-                : "No mood entries yet"}
+                ? "Nenhum humor corresponde aos seus filtros"
+                : "Nenhum registro de humor ainda"}
             </p>
             {searchTerm || filterRating !== "all" ? (
               <Button
@@ -92,7 +92,7 @@ const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
                   setFilterRating("all");
                 }}
               >
-                Clear Filters
+                Limpar Filtros
               </Button>
             ) : null}
           </div>
