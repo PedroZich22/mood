@@ -16,6 +16,12 @@ export const formatDateTime = (date) => {
   };
 };
 
+export const formatDateTimeIso = (dateIso) => {
+  const dateOnly = dateIso.split("T")[0];
+  const timeOnly = dateIso.split("T")[1].split(".")[0];
+  return dateOnly + "T" + timeOnly + "-03:00"
+}
+
 export const isToday = (date) => {
   return new Date(date).toDateString() === new Date().toDateString();
 };

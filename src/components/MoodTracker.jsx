@@ -3,7 +3,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Save, Heart, Tag, FileText } from "lucide-react";
 import { useTagGroups } from "../hooks/useTagGroups";
 import { useToast } from "../contexts/ToastContext";
-import { isDateInFuture } from "../utils/date";
+import { isDateInFuture, formatDateTimeIso } from "../utils/date";
 import { Button } from "./ui/Button";
 import { FormSection } from "./ui/FormSection";
 import { DatePicker } from "./ui/DatePicker";
@@ -74,12 +74,12 @@ const MoodTracker = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedMood) {
-      showError("Please select a mood first");
+      showError("Por favor, selecione um mood primeiro");
       return;
     }
 
     if (isDateInFuture(selectedDate)) {
-      showError("Cannot create mood entries for future dates");
+      showError("Não é possível criar registros para datas futuras");
       return;
     }
 
@@ -90,20 +90,20 @@ const MoodTracker = () => {
         rating: selectedMood,
         note,
         tags: selectedTags.map((tag) => tag.id),
-        date: new Date(selectedDate).toISOString(),
+        date: formatDateTimeIso(new Date(selectedDate).toISOString())
       };
 
       if (isEditMode) {
         await moodService.updateMood(moodId, moodEntry);
-        showSuccess("Mood entry updated successfully! ✨");
+        showSuccess("Registro de humor atualizado com sucesso! ✨");
       } else {
         await moodService.createMood(moodEntry);
-        showSuccess("Mood entry saved successfully! 🎉");
+        showSuccess("Registro de humor salvo com sucesso! 🎉");
       }
 
       navigate("/dashboard");
     } catch {
-      showError("Failed to save mood entry");
+      showError("Falha ao salvar registro de humor");
     } finally {
       setIsSubmitting(false);
     }
@@ -129,7 +129,7 @@ const MoodTracker = () => {
                 />
                 {isDateInFuture(selectedDate) && (
                   <p className="text-red-600 text-sm mt-1">
-                    Cannot create entries for future dates
+                    Não é possível criar registros para datas futuras
                   </p>
                 )}
               </div>
@@ -154,7 +154,7 @@ const MoodTracker = () => {
           {tagsLoading ? (
             <div className="flex items-center justify-center py-4">
               <div className="w-6 h-6 border-2 border-brown-600 border-t-transparent rounded-full animate-spin"></div>
-              <span className="ml-2 text-brown-600">Loading...</span>
+              <span className="ml-2 text-brown-600">Carregando...</span>
             </div>
           ) : (
             <TagSelector
@@ -189,12 +189,12 @@ const MoodTracker = () => {
             {isSubmitting ? (
               <div className="flex items-center justify-center space-x-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>Saving...</span>
+                <span>Salvando...</span>
               </div>
             ) : (
               <div className="flex items-center justify-center space-x-2">
                 <Save size={18} />
-                <span>Save Mood Entry</span>
+                <span>Salvar registro de humor</span>
               </div>
             )}
           </Button>
