@@ -54,8 +54,8 @@ const Analytics = () => {
       count,
     })
   );
-
   const topTags = analytics.topTags || [];
+  const trends = analytics.trends || [];
 
   const stats = {
     totalEntries: analytics.totalEntries || 0,
@@ -126,16 +126,16 @@ const Analytics = () => {
             <CardTitle>Mood Trend</CardTitle>
           </CardHeader>
           <CardContent>
-            {moodDistribution.length > 0 ? (
+            {trends.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={moodDistribution}>
+                <LineChart data={trends}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="count" />
+                  <XAxis dataKey="date" />
                   <YAxis domain={[1, 5]} />
                   <Tooltip />
                   <Line
                     type="monotone"
-                    dataKey="rating"
+                    dataKey="averageMood"
                     stroke="#8b6f47"
                     strokeWidth={3}
                     dot={{ fill: "#8b6f47", strokeWidth: 2, r: 6 }}
