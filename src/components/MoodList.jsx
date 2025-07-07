@@ -14,11 +14,9 @@ const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
 
   const filteredMoods = moods
     .filter((mood) => {
-      const matchesSearch =
-        mood.note?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        mood.tags?.some((tag) =>
-          tag.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+      const matchesSearch = mood.note
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
       const matchesRating =
         filterRating === "all" || mood.rating.toString() === filterRating;
       return matchesSearch && matchesRating;
