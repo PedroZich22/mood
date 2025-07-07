@@ -1,10 +1,9 @@
-import { X, Edit3, Trash2, Clock, Plus } from "lucide-react";
+import { X, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "../contexts/ToastContext";
-import { getMoodEmoji, getMoodLabel } from "../config/mood";
 import { Button } from "./ui/Button";
 import { formatDate, isDateInFuture } from "../utils/date";
-import DynamicLucideIcon from "./ui/DynamicIcon";
+import { MoodItem } from "./MoodItem";
 
 const DayMoodModal = ({
   isOpen,
@@ -56,66 +55,12 @@ const DayMoodModal = ({
             <div className="space-y-4 mb-6">
               <h3 className="font-semibold text-brown-800">Mood Entries</h3>
               {dayMoods.map((mood, index) => (
-                <div
-                  key={mood.id || index}
-                  className="bg-brown-50 rounded-lg p-4"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-3">
-                      <div className="text-2xl">
-                        {getMoodEmoji(mood.rating)}
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-brown-800">
-                          {getMoodLabel(mood.rating)}
-                        </h4>
-                        <p className="text-brown-600 text-sm flex items-center">
-                          <Clock className="w-4 h-4 mr-1" />
-                          {new Date(
-                            mood.date || mood.createdAt
-                          ).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </p>
-                        {mood.note && (
-                          <p className="text-brown-700 text-sm mt-2 bg-white p-2 rounded">
-                            &quot;{mood.note}&quot;
-                          </p>
-                        )}
-                        {mood.tags && mood.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-2">
-                            {mood.tags.map((tag, tagIndex) => (
-                              <span
-                                key={tagIndex}
-                                className="flex items-center gap-2 px-3 py-1 rounded-full text-sm transition-all duration-200 border bg-brown-600 text-white border-brown-600"
-                              >
-                                <DynamicLucideIcon name={tag.icon} size={20} />
-                                {tag.name}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        onClick={() => handleEditMood(mood.id)}
-                        variant="ghost"
-                        aria-label="Edit Mood"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        onClick={() => handleDeleteMood(mood.id)}
-                        variant="destructive"
-                        aria-label="Delete Mood"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                <MoodItem
+                  mood={mood}
+                  key={index}
+                  handleEditMood={handleEditMood}
+                  handleDeleteMood={handleDeleteMood}
+                />
               ))}
             </div>
           ) : (
