@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { moodService } from "../services/moodService";
 
 export const useAnalytics = (timeRange = "30d") => {
-  const [analytics, setAnalytics] = useState(null);
-  const [trends, setTrends] = useState(null);
+  const [analytics, setAnalytics] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,13 +15,9 @@ export const useAnalytics = (timeRange = "30d") => {
       setIsLoading(true);
       setError(null);
 
-      const [analyticsData, trendsData] = await Promise.all([
-        moodService.getAnalytics(timeRange),
-        moodService.getTrends("week"),
-      ]);
+      const analyticsData = await moodService.getAnalytics(timeRange);
 
       setAnalytics(analyticsData);
-      setTrends(trendsData);
     } catch (error) {
       setError(error.message);
       console.error("Failed to fetch analytics:", error);
@@ -37,7 +32,6 @@ export const useAnalytics = (timeRange = "30d") => {
 
   return {
     analytics,
-    trends,
     isLoading,
     error,
     refreshAnalytics,

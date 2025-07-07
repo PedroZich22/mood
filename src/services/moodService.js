@@ -60,15 +60,4 @@ export const moodService = {
       );
     }
   },
-
-  getTrends: async (period = "week") => {
-    try {
-      const response = await apiClient.get(`/moods/trends?period=${period}`);
-      return response.data;
-    } catch (error) {
-      throw new Error(
-        error.response?.data?.message || "Failed to fetch trends"
-      );
-    }
-  },
 };

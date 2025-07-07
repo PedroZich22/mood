@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   LineChart,
   Line,
@@ -10,35 +10,20 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import { TrendingUp, Calendar, BarChart2 } from "lucide-react";
+import { Calendar, BarChart2 } from "lucide-react";
 import { useAnalytics } from "../hooks/useAnalytics";
-import { useMoods } from "../hooks/useMoods";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { Select } from "./ui/Select";
 import { StatCard } from "./ui/StatCard";
-import { useStats } from "../hooks/useStats";
 import { PageHeader } from "./ui/PageHeader";
+import { formatDate } from "../utils/date";
+import { getMoodEmoji, MOOD_CONFIG } from "../config/mood";
 
 const Analytics = () => {
-  const [chartData, setChartData] = useState([]);
   const [timeRange, setTimeRange] = useState("30d");
   const { isLoading: analyticsLoading, analytics } = useAnalytics(timeRange);
-  const { moods, isLoading: moodsLoading } = useMoods();
-  const stats = useStats(moods);
 
-  console.log(analytics);
-
-  useEffect(() => {
-    if (analytics) {
-      const formattedData = analytics.map((entry) => ({
-        date: new Date(entry.date).toLocaleDateString(),
-        mood: entry.averageMood,
-      }));
-      setChartData(formattedData);
-    }
-  }, [analytics]);
-
-  if (moodsLoading || analyticsLoading) {
+  if (analyticsLoading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="animate-pulse">
@@ -62,6 +47,22 @@ const Analytics = () => {
       </div>
     );
   }
+
+  const moodDistribution = Object.entries(analytics.moodDistribution).map(
+    ([rating, count]) => ({
+      rating,
+      count,
+    })
+  );
+
+  const topTags = analytics.topTags || [];
+
+  const stats = {
+    totalEntries: analytics.totalEntries || 0,
+    averageMood: analytics.averageMood || 0,
+    bestDay: analytics.bestDay || "N/A",
+    worstDay: analytics.worstDay || "N/A",
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -93,24 +94,28 @@ const Analytics = () => {
         />
 
         <StatCard
-          icon={TrendingUp}
+          icon={() => (
+            <span className="text-lg">
+              {getMoodEmoji(stats.averageMood) || MOOD_CONFIG.emojis[1]}
+            </span>
+          )}
           title="Average Mood"
-          value={`${stats.averageMood}/5`}
+          value={`${stats.averageMood.toFixed(2)}/5`}
           iconColor="text-purple-600"
           iconBgColor="bg-purple-100"
         />
 
         <StatCard
-          icon={() => <div className="text-2xl">😄</div>}
+          icon={() => <div className="text-lg">😄</div>}
           title="Best Day"
-          value={stats.bestDay || "N/A"}
+          value={formatDate(stats.bestDay) || "N/A"}
           iconBgColor="bg-green-100"
         />
 
         <StatCard
-          icon={() => <div className="text-2xl">💪</div>}
+          icon={() => <div className="text-lg">💪</div>}
           title="Challenging Day"
-          value={stats.worstDay || "N/A"}
+          value={formatDate(stats.worstDay) || "N/A"}
           iconBgColor="bg-orange-100"
         />
       </div>
@@ -121,16 +126,16 @@ const Analytics = () => {
             <CardTitle>Mood Trend</CardTitle>
           </CardHeader>
           <CardContent>
-            {chartData.length > 0 ? (
+            {moodDistribution.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={chartData}>
+                <LineChart data={moodDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
+                  <XAxis dataKey="count" />
                   <YAxis domain={[1, 5]} />
                   <Tooltip />
                   <Line
                     type="monotone"
-                    dataKey="mood"
+                    dataKey="rating"
                     stroke="#8b6f47"
                     strokeWidth={3}
                     dot={{ fill: "#8b6f47", strokeWidth: 2, r: 6 }}
@@ -151,9 +156,32 @@ const Analytics = () => {
             <CardTitle>Most Common Tags</CardTitle>
           </CardHeader>
           <CardContent>
-            {stats.mostCommonTags?.length > 0 ? (
+            {moodDistribution.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={stats.mostCommonTags}>
+                <BarChart data={moodDistribution}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="rating" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#8b6f47" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-64 flex items-center justify-center text-brown-600">
+                No tags data available
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Most Common Tags</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {topTags.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={topTags}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="tag" />
                   <YAxis />

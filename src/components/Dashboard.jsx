@@ -93,7 +93,7 @@ const Dashboard = () => {
             </span>
           )}
           title="Avg Mood"
-          value={stats.averageMood}
+          value={`${stats.averageMood.toFixed(2)}/5`}
           iconBgColor="bg-purple-100"
         />
 

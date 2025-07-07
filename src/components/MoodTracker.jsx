@@ -89,7 +89,7 @@ const MoodTracker = () => {
       const moodEntry = {
         rating: selectedMood,
         note,
-        tags: selectedTags,
+        tags: selectedTags.map((tag) => tag.id),
         date: new Date(selectedDate).toISOString(),
       };
 

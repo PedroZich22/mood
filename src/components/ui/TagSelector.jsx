@@ -25,7 +25,6 @@ const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
     );
   }
 
-
   return (
     <div className={cn("space-y-3", className)}>
       {/* Selected Tags */}
@@ -60,7 +59,9 @@ const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
                 onClick={() => toggleGroup(group.id)}
                 className="w-full p-3 flex items-center justify-between bg-white hover:bg-brown-50 transition-colors"
               >
-                <span className="font-medium text-brown-800">{group.group_name}</span>
+                <span className="font-medium text-brown-800">
+                  {group.groupName}
+                </span>
                 <ChevronDown
                   className={cn(
                     "w-4 h-4 text-brown-600 transition-transform duration-200",
@@ -73,8 +74,6 @@ const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
                 <div className="p-3 bg-cream-50 border-t border-cream-200">
                   <div className="flex flex-wrap gap-2">
                     {group.tags.map((tag, tagIndex) => {
-                      const tagName = typeof tag === "string" ? tag : tag.name;
-                      const icon = typeof tag === "string" ? tag: tag.icon;
                       const isSelected = selectedTags.includes(tag);
 
                       return (
@@ -89,8 +88,8 @@ const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
                               : "bg-white text-brown-700 border-brown-300 hover:border-brown-500"
                           )}
                         >
-                          <DynamicLucideIcon name={icon} size={20}/>
-                          {tagName}
+                          <DynamicLucideIcon name={tag.icon} size={20} />
+                          {tag.name}
                         </button>
                       );
                     })}
