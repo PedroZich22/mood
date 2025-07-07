@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { Search } from "lucide-react";
 import { getMoodLabel, MOOD_CONFIG } from "../config/mood";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
-import { Input } from "./ui/Input";
 import { Select } from "./ui/Select";
 import { Button } from "./ui/Button";
 import { MoodItem } from "./MoodItem";
@@ -40,16 +38,6 @@ const MoodList = ({ moods, onEditMood, onDeleteMood }) => {
       <CardHeader className="items-center justify-between">
         <CardTitle>Histórico</CardTitle>
         <div className="flex items-center space-x-3">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-brown-400" />
-            <Input
-              type="text"
-              placeholder="Buscar humores..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-48 text-sm py-2"
-            />
-          </div>
           <Select
             value={filterRating}
             onChange={(e) => setFilterRating(e.target.value)}
