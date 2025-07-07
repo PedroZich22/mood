@@ -18,6 +18,7 @@ import { StatCard } from "./ui/StatCard";
 import { PageHeader } from "./ui/PageHeader";
 import { formatDate } from "../utils/date";
 import { getMoodEmoji, MOOD_CONFIG } from "../config/mood";
+import DynamicLucideIcon from "./ui/DynamicIcon";
 
 const Analytics = () => {
   const [timeRange, setTimeRange] = useState("30d");
@@ -54,6 +55,7 @@ const Analytics = () => {
       count,
     })
   );
+
   const topTags = analytics.topTags || [];
   const trends = analytics.trends || [];
 
@@ -79,7 +81,7 @@ const Analytics = () => {
             <option value="7d">7 Dias</option>
             <option value="30d">30 Dias</option>
             <option value="90d">90 Dias</option>
-            <option value="1y">1 Ano</option>
+            <option value="365d">1 Ano</option>
           </Select>
         }
       />
@@ -100,7 +102,7 @@ const Analytics = () => {
             </span>
           )}
           title="Humor Médio"
-          value={`${stats.averageMood.toFixed(2)}/5`}
+          value={`${stats.averageMood.toFixed(0)}/5`}
           iconColor="text-purple-600"
           iconBgColor="bg-purple-100"
         />
@@ -130,9 +132,26 @@ const Analytics = () => {
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={trends}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis domain={[1, 5]} />
-                  <Tooltip />
+                  <XAxis dataKey="date" tickFormatter={formatDate} />
+                  <YAxis domain={[1, 5]} tickFormatter={getMoodEmoji} />
+                  <Tooltip
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        const mood = payload[0].value;
+                        return (
+                          <div className="bg-white p-2 border rounded shadow">
+                            <p>
+                              <strong>Data: {formatDate(label)}</strong>
+                            </p>
+                            <p>
+                              Média: {mood.toFixed(2)} {getMoodEmoji(mood)}
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
                   <Line
                     type="monotone"
                     dataKey="averageMood"
@@ -153,16 +172,31 @@ const Analytics = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Tags Mais Comuns</CardTitle>
+            <CardTitle>Humores Mais Comuns</CardTitle>
           </CardHeader>
           <CardContent>
             {moodDistribution.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={moodDistribution}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="rating" />
+                  <XAxis dataKey="rating" tickFormatter={getMoodEmoji} />
                   <YAxis />
-                  <Tooltip />
+                  <Tooltip
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        const quantidade = payload[0].value;
+                        return (
+                          <div className="bg-white p-2 border rounded shadow">
+                            <p>
+                              <strong>Quantidade: {quantidade}</strong>
+                            </p>
+                            <p>Humor: {getMoodEmoji(label)}</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
                   <Bar dataKey="count" fill="#8b6f47" />
                 </BarChart>
               </ResponsiveContainer>
@@ -174,21 +208,31 @@ const Analytics = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="col-span-1 lg:col-span-2">
           <CardHeader>
             <CardTitle>Tags Mais Comuns</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex items-center gap-4">
             {topTags.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={topTags}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="tag" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="count" fill="#8b6f47" />
-                </BarChart>
-              </ResponsiveContainer>
+              topTags.map((tag) => (
+                <div
+                  key={tag.id}
+                  className="flex items-center space-x-3 p-4 bg-brown-50 rounded-xl shadow-sm border border-brown-100"
+                >
+                  <DynamicLucideIcon
+                    name={tag.icon}
+                    className="text-brown-600 w-6 h-6 shrink-0"
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-brown-700 font-medium">
+                      {tag.name}
+                    </span>
+                    <span className="text-brown-400 text-sm">
+                      Quantidade: {tag.count}
+                    </span>
+                  </div>
+                </div>
+              ))
             ) : (
               <div className="h-64 flex items-center justify-center text-brown-600">
                 Nenhum dado de tags disponível
