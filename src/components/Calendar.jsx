@@ -85,7 +85,7 @@ const Calendar = ({ moods, onEditMood, onDeleteMood }) => {
                       ? "ring-2 ring-brown-600 bg-brown-50"
                       : ""
                   }
-                  ${getMoodCalendarColor(day.averageMood) || "bg-white"}
+                  ${getMoodCalendarColor(day.averageMood)}
                 `}
               >
                 <div className="flex flex-col h-full w-full">
