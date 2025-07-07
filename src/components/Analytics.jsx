@@ -67,19 +67,19 @@ const Analytics = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <PageHeader
-        title="Mood Analytics"
-        description="Insights into your emotional patterns and trends."
-        badge={{ icon: BarChart2, text: "Data insights" }}
+        title="Análise do Humor"
+        description="Insights sobre seus padrões emocionais e tendências."
+        badge={{ icon: BarChart2, text: "Insights de dados" }}
         action={
           <Select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value)}
             className="w-32"
           >
-            <option value="7d">7 Days</option>
-            <option value="30d">30 Days</option>
-            <option value="90d">90 Days</option>
-            <option value="1y">1 Year</option>
+            <option value="7d">7 Dias</option>
+            <option value="30d">30 Dias</option>
+            <option value="90d">90 Dias</option>
+            <option value="1y">1 Ano</option>
           </Select>
         }
       />
@@ -87,7 +87,7 @@ const Analytics = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <StatCard
           icon={Calendar}
-          title="Total Entries"
+          title="Total de Registros"
           value={stats.totalEntries}
           iconColor="text-blue-600"
           iconBgColor="bg-blue-100"
@@ -99,7 +99,7 @@ const Analytics = () => {
               {getMoodEmoji(stats.averageMood) || MOOD_CONFIG.emojis[1]}
             </span>
           )}
-          title="Average Mood"
+          title="Humor Médio"
           value={`${stats.averageMood.toFixed(2)}/5`}
           iconColor="text-purple-600"
           iconBgColor="bg-purple-100"
@@ -107,14 +107,14 @@ const Analytics = () => {
 
         <StatCard
           icon={() => <div className="text-lg">😄</div>}
-          title="Best Day"
+          title="Melhor Dia"
           value={formatDate(stats.bestDay) || "N/A"}
           iconBgColor="bg-green-100"
         />
 
         <StatCard
           icon={() => <div className="text-lg">💪</div>}
-          title="Challenging Day"
+          title="Dia Desafiador"
           value={formatDate(stats.worstDay) || "N/A"}
           iconBgColor="bg-orange-100"
         />
@@ -123,7 +123,7 @@ const Analytics = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card>
           <CardHeader>
-            <CardTitle>Mood Trend</CardTitle>
+            <CardTitle>Tendência do Humor</CardTitle>
           </CardHeader>
           <CardContent>
             {trends.length > 0 ? (
@@ -145,7 +145,7 @@ const Analytics = () => {
               </ResponsiveContainer>
             ) : (
               <div className="h-64 flex items-center justify-center text-brown-600">
-                No mood data available
+                Nenhum dado de humor disponível
               </div>
             )}
           </CardContent>
@@ -153,7 +153,7 @@ const Analytics = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Most Common Tags</CardTitle>
+            <CardTitle>Tags Mais Comuns</CardTitle>
           </CardHeader>
           <CardContent>
             {moodDistribution.length > 0 ? (
@@ -168,7 +168,7 @@ const Analytics = () => {
               </ResponsiveContainer>
             ) : (
               <div className="h-64 flex items-center justify-center text-brown-600">
-                No tags data available
+                Nenhum dado de tags disponível
               </div>
             )}
           </CardContent>
@@ -176,7 +176,7 @@ const Analytics = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Most Common Tags</CardTitle>
+            <CardTitle>Tags Mais Comuns</CardTitle>
           </CardHeader>
           <CardContent>
             {topTags.length > 0 ? (
@@ -191,7 +191,7 @@ const Analytics = () => {
               </ResponsiveContainer>
             ) : (
               <div className="h-64 flex items-center justify-center text-brown-600">
-                No tags data available
+                Nenhum dado de tags disponível
               </div>
             )}
           </CardContent>

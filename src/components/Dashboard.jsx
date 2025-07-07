@@ -58,12 +58,12 @@ const Dashboard = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <PageHeader
         title={`${getGreeting()}, ${user.name}! 👋`}
-        description="Track your emotional journey and build healthy habits"
-        badge={{ icon: Sparkles, text: "Your wellness dashboard" }}
+        description="Acompanhe sua jornada emocional e construa hábitos saudáveis"
+        badge={{ icon: Sparkles, text: "Seu painel de bem-estar" }}
         action={
           <Link to="/mood" className="btn btn-primary space-x-2">
             <Plus size={20} />
-            <span>Track Mood</span>
+            <span>Registrar Humor</span>
           </Link>
         }
       />
@@ -71,7 +71,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <StatCard
           icon={Target}
-          title="Weekly Goal"
+          title="Meta Semanal"
           value={`${stats.completedThisWeek}/${stats.weeklyGoal}`}
           progress={stats.completedThisWeek / stats.weeklyGoal}
           iconColor="text-green-600"
@@ -80,7 +80,7 @@ const Dashboard = () => {
 
         <StatCard
           icon={Zap}
-          title="Day Streak"
+          title="Sequência de Dias"
           value={stats.streakDays}
           iconColor="text-orange-600"
           iconBgColor="bg-orange-100"
@@ -92,14 +92,14 @@ const Dashboard = () => {
               {getMoodEmoji(stats.averageMood) || MOOD_CONFIG.emojis[1]}
             </span>
           )}
-          title="Avg Mood"
+          title="Humor Médio"
           value={`${stats.averageMood.toFixed(2)}/5`}
           iconBgColor="bg-purple-100"
         />
 
         <StatCard
           icon={CalendarIcon}
-          title="Total Entries"
+          title="Total de Registros"
           value={stats.totalEntries}
           iconColor="text-blue-600"
           iconBgColor="bg-blue-100"
@@ -107,7 +107,7 @@ const Dashboard = () => {
       </div>
 
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-brown-800">Your Journey</h2>
+        <h2 className="text-xl font-semibold text-brown-800">Sua Jornada</h2>
         <div className="flex items-center space-x-2 bg-brown-100 rounded-lg p-1">
           <Button
             variant={viewMode === "calendar" ? "default" : "ghost"}
@@ -116,7 +116,7 @@ const Dashboard = () => {
             className="flex items-center space-x-2"
           >
             <CalendarIcon className="w-4 h-4" />
-            <span>Calendar</span>
+            <span>Calendário</span>
           </Button>
           <Button
             variant={viewMode === "list" ? "default" : "ghost"}
@@ -125,7 +125,7 @@ const Dashboard = () => {
             className="flex items-center space-x-2"
           >
             <List className="w-4 h-4" />
-            <span>List</span>
+            <span>Lista</span>
           </Button>
         </div>
       </div>
