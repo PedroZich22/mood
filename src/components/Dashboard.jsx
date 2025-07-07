@@ -139,7 +139,7 @@ const Dashboard = () => {
       ) : (
         <MoodList
           moods={moods}
-          onEditMood={() => {}}
+          onEditMood={handleEditMood}
           onDeleteMood={handleDeleteMood}
         />
       )}
