@@ -4,6 +4,7 @@ import { useToast } from "../contexts/ToastContext";
 import { getMoodEmoji, getMoodLabel } from "../config/mood";
 import { Button } from "./ui/Button";
 import { formatDate, isDateInFuture } from "../utils/date";
+import DynamicLucideIcon from "./ui/DynamicIcon";
 
 const DayMoodModal = ({
   isOpen,
@@ -87,9 +88,10 @@ const DayMoodModal = ({
                             {mood.tags.map((tag, tagIndex) => (
                               <span
                                 key={tagIndex}
-                                className="text-xs bg-brown-200 text-brown-700 px-2 py-1 rounded"
+                                className="flex items-center gap-2 px-3 py-1 rounded-full text-sm transition-all duration-200 border bg-brown-600 text-white border-brown-600"
                               >
-                                {tag}
+                                <DynamicLucideIcon name={tag.icon} size={20} />
+                                {tag.name}
                               </span>
                             ))}
                           </div>

@@ -74,8 +74,6 @@ const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
                 <div className="p-3 bg-cream-50 border-t border-cream-200">
                   <div className="flex flex-wrap gap-2">
                     {group.tags.map((tag, tagIndex) => {
-                      const tagName = typeof tag === "string" ? tag : tag.name;
-                      const icon = typeof tag === "string" ? tag : tag.icon;
                       const isSelected = selectedTags.includes(tag);
 
                       return (
@@ -90,8 +88,8 @@ const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
                               : "bg-white text-brown-700 border-brown-300 hover:border-brown-500"
                           )}
                         >
-                          <DynamicLucideIcon name={icon} size={20} />
-                          {tagName}
+                          <DynamicLucideIcon name={tag.icon} size={20} />
+                          {tag.name}
                         </button>
                       );
                     })}
