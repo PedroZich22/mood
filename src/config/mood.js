@@ -8,19 +8,19 @@ export const MOOD_CONFIG = {
   },
 
   labels: {
-    1: "Very Sad",
-    2: "Sad",
-    3: "Neutral",
-    4: "Happy",
-    5: "Very Happy",
+    1: "Muito Triste",
+    2: "Triste",
+    3: "Neutro",
+    4: "Feliz",
+    5: "Muito Feliz",
   },
 
   descriptions: {
-    1: "Feeling really down today",
-    2: "Not having a great day",
-    3: "Feeling okay, nothing special",
-    4: "Having a good day!",
-    5: "Feeling absolutely amazing!",
+    1: "Me sentindo muito mal hoje",
+    2: "Não está sendo um bom dia",
+    3: "Me sentindo bem, nada especial",
+    4: "Tendo um bom dia!",
+    5: "Me sentindo absolutamente incrível!",
   },
 
   colors: {

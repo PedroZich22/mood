@@ -35,7 +35,7 @@ const Calendar = ({ moods, onEditMood, onDeleteMood }) => {
     <>
       <Card>
         <CardHeader className="items-center justify-between">
-          <CardTitle>Calendar</CardTitle>
+          <CardTitle>Calendário</CardTitle>
           <div className="flex items-center space-x-4">
             <Button
               variant="ghost"

@@ -56,11 +56,11 @@ const MoodTracker = () => {
           new Date(mood.date || mood.createdAt).toISOString().split("T")[0]
         );
       } else {
-        showError("Mood entry not found");
+        showError("Registro de humor não encontrado");
         navigate("/dashboard");
       }
     } catch {
-      showError("Failed to load mood entry");
+      showError("Falha ao carregar registro de humor");
       navigate("/dashboard");
     }
   };
@@ -74,7 +74,7 @@ const MoodTracker = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedMood) {
-      showError("Por favor, selecione um mood primeiro");
+      showError("Por favor, selecione um humor primeiro");
       return;
     }
 
@@ -117,9 +117,9 @@ const MoodTracker = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="mb-8">
           <PageHeader
-            title="How are you feeling?"
-            description="Take a moment to reflect on your current mood and add any thoughts or context that might help you understand your emotional patterns."
-            badge={{ icon: Heart, text: "Track your emotional journey" }}
+            title="Como você está se sentindo?"
+            description="Reserve um momento para refletir sobre seu humor atual e adicione quaisquer pensamentos ou contexto que possam ajudá-lo a entender seus padrões emocionais."
+            badge={{ icon: Heart, text: "Acompanhe sua jornada emocional" }}
             action={
               <div className="max-w-md">
                 <DatePicker
@@ -139,8 +139,8 @@ const MoodTracker = () => {
 
         <FormSection
           icon={Heart}
-          title="Mood Rating"
-          description="How are you feeling?"
+          title="Avaliação do Humor"
+          description="Como você está se sentindo?"
           required
         >
           <MoodSelector value={selectedMood} onChange={setSelectedMood} />
@@ -149,7 +149,7 @@ const MoodTracker = () => {
         <FormSection
           icon={Tag}
           title="Tags"
-          description="What influenced your mood?"
+          description="O que influenciou seu humor?"
         >
           {tagsLoading ? (
             <div className="flex items-center justify-center py-4">
@@ -167,13 +167,13 @@ const MoodTracker = () => {
 
         <FormSection
           icon={FileText}
-          title="Notes"
-          description="Any additional thoughts?"
+          title="Anotações"
+          description="Algum pensamento adicional?"
         >
           <Textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="What's on your mind?"
+            placeholder="O que está em sua mente?"
             className="h-24 resize-none"
             maxLength={500}
           />

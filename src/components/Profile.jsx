@@ -91,9 +91,9 @@ const Profile = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <PageHeader
-        title="Profile Settings"
-        description="Manage your account settings and preferences."
-        badge={{ icon: UserCircle, text: "Your profile" }}
+        title="Configurações do Perfil"
+        description="Gerencie as configurações da sua conta e preferências."
+        badge={{ icon: UserCircle, text: "Seu perfil" }}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -139,7 +139,7 @@ const Profile = () => {
                     size="sm"
                   >
                     <Save size={16} />
-                    <span>{isSaving ? "Saving..." : "Save Changes"}</span>
+                    <span>{isSaving ? "Salvando..." : "Salvar Alterações"}</span>
                   </Button>
                 </div>
               ) : (

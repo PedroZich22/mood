@@ -10,9 +10,9 @@ const Navbar = () => {
   const { logout, user } = useAuth();
 
   const navigation = [
-    { name: "Dashboard", href: "/dashboard", icon: Home },
-    { name: "Mood Tracker", href: "/mood", icon: Heart },
-    { name: "Analytics", href: "/analytics", icon: BarChart3 },
+    { name: "Painel", href: "/dashboard", icon: Home },
+    { name: "Registrar Humor", href: "/mood", icon: Heart },
+    { name: "Análises", href: "/analytics", icon: BarChart3 },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -73,7 +73,7 @@ const Navbar = () => {
                 variant="ghost"
                 size="icon"
                 onClick={logout}
-                title="Logout"
+                title="Sair"
               >
                 <LogOut size={20} />
               </Button>
@@ -139,7 +139,7 @@ const Navbar = () => {
                 className="flex items-center space-x-3 px-3 py-2 w-full justify-start"
               >
                 <LogOut size={20} />
-                <span className="font-medium">Logout</span>
+                <span className="font-medium">Sair</span>
               </Button>
             </div>
           </div>

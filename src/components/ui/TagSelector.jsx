@@ -20,7 +20,7 @@ const TagSelector = ({ tagGroups, selectedTags, onTagToggle, className }) => {
   if (!tagGroups || tagGroups.length === 0) {
     return (
       <div className={cn("text-center py-6", className)}>
-        <p className="text-brown-600">No tags available</p>
+        <p className="text-brown-600">Nenhuma tag disponível</p>
       </div>
     );
   }
