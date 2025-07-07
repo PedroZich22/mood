@@ -2,6 +2,7 @@ import { Clock, Edit3, Trash2 } from "lucide-react";
 import { getMoodEmoji, getMoodLabel } from "../config/mood";
 import { Button } from "./ui/Button";
 import DynamicLucideIcon from "./ui/DynamicIcon";
+import { formatToBrazilianDateTime } from "../utils/date";
 
 export const MoodItem = ({ mood, handleEditMood, handleDeleteMood }) => {
   return (
@@ -15,10 +16,7 @@ export const MoodItem = ({ mood, handleEditMood, handleDeleteMood }) => {
             </h4>
             <p className="text-brown-600 text-sm flex items-center">
               <Clock className="w-4 h-4 mr-1" />
-              {new Date(mood.date || mood.createdAt).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              {formatToBrazilianDateTime(mood.date || mood.createdAt)}
             </p>
           </div>
 

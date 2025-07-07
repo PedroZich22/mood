@@ -28,8 +28,7 @@ export const useCalendar = (moods) => {
         moods: dayMoods,
         averageMood:
           dayMoods.length > 0
-            ? dayMoods.reduce((sum, mood) => sum + mood.rating, 0) /
-              dayMoods.length
+            ? dayMoods.reduce((sum, mood) => sum + Number(mood.rating), 0) / dayMoods.length
             : null,
       });
 
