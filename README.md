@@ -55,3 +55,8 @@ VITE_API_BASE_URL=http://localhost:3000/api
 VITE_NODE_ENV=development
 VITE_ANALYTICS_ID=your_analytics_id
 VITE_SENTRY_DSN=your_sentry_dsn
+```
+
+## Licença
+
+Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE.txt para detalhes.
