@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 
 export const useCalendar = (moods) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  console.log('moods', moods)
+
   const calendarDays = useMemo(() => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
