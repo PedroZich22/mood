@@ -3,7 +3,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Save, Heart, Tag, FileText } from "lucide-react";
 import { useTagGroups } from "../hooks/useTagGroups";
 import { useToast } from "../contexts/ToastContext";
-import { isDateInFuture, formatDateTimeIso } from "../utils/date";
+import { isDateInFuture, formatDateTimeIso, getCurrentLocalDateString, getCurrentLocalTimeString } from "../utils/date";
 import { Button } from "./ui/Button";
 import { FormSection } from "./ui/FormSection";
 import { DatePicker } from "./ui/DatePicker";
@@ -17,9 +17,8 @@ const MoodTracker = () => {
   const [selectedMood, setSelectedMood] = useState(null);
   const [note, setNote] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  const [selectedDate, setSelectedDate] = useState(getCurrentLocalDateString());
+  const [selectedTime, setSelectedTime] = useState(getCurrentLocalTimeString());
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { tagGroups, isLoading: tagsLoading } = useTagGroups();
@@ -52,8 +51,12 @@ const MoodTracker = () => {
         setSelectedMood(mood.rating);
         setNote(mood.note || "");
         setSelectedTags(mood.tags || []);
-        setSelectedDate(
-          new Date(mood.date || mood.createdAt).toISOString().split("T")[0]
+        const moodDate = new Date(mood.date || mood.createdAt);
+        setSelectedDate(moodDate.toISOString().split("T")[0]);
+        setSelectedTime(
+          moodDate.getHours().toString().padStart(2, "0") + 
+          ":" + 
+          moodDate.getMinutes().toString().padStart(2, "0")
         );
       } else {
         showError("Registro de humor não encontrado");
@@ -78,7 +81,8 @@ const MoodTracker = () => {
       return;
     }
 
-    if (isDateInFuture(selectedDate)) {
+    const fullDateTime = new Date(`${selectedDate}T${selectedTime}`);
+    if (isDateInFuture(fullDateTime)) {
       showError("Não é possível criar registros para datas futuras");
       return;
     }
@@ -90,7 +94,7 @@ const MoodTracker = () => {
         rating: selectedMood,
         note,
         tags: selectedTags.map((tag) => tag.id),
-        date: formatDateTimeIso(new Date(selectedDate).toISOString())
+        date: formatDateTimeIso(`${selectedDate}T${selectedTime}:00`)
       };
 
       if (isEditMode) {
@@ -109,9 +113,8 @@ const MoodTracker = () => {
     }
   };
 
-  const isFormValid =
-    selectedDate && selectedMood && !isDateInFuture(selectedDate);
-
+  const fullDateTime = `${selectedDate}T${selectedTime}:00`;
+  const isFormValid = selectedDate && selectedTime && selectedMood && !isDateInFuture(fullDateTime);
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -121,13 +124,21 @@ const MoodTracker = () => {
             description="Reserve um momento para refletir sobre seu humor atual e adicione quaisquer pensamentos ou contexto que possam ajudá-lo a entender seus padrões emocionais."
             badge={{ icon: Heart, text: "Acompanhe sua jornada emocional" }}
             action={
-              <div className="max-w-md">
-                <DatePicker
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  max={new Date().toISOString().split("T")[0]}
-                />
-                {isDateInFuture(selectedDate) && (
+              <div className="max-w-md space-y-2">
+                <div className="flex space-x-2">
+                  <DatePicker
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    max={new Date().toISOString().split("T")[0]}
+                  />
+                  <input
+                    type="time"
+                    value={selectedTime}
+                    onChange={(e) => setSelectedTime(e.target.value)}
+                    className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-brown-500 focus:ring-brown-500 sm:text-sm"
+                  />
+                </div>
+                {isDateInFuture(fullDateTime) && (
                   <p className="text-red-600 text-sm mt-1">
                     Não é possível criar registros para datas futuras
                   </p>
