@@ -45,9 +45,6 @@ cp .env.example .env
 ```bash
 # Desenvolvimento
 npm run dev
-
-# Produção
-npm start
 ```
 
 
