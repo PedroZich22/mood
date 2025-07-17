@@ -1,18 +1,18 @@
 import { useState, useMemo } from "react";
+import type { Mood, CalendarDay } from "@/types";
 
-export const useCalendar = (moods) => {
+export const useCalendar = (moods: Mood[]) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const calendarDays = useMemo(() => {
+  const calendarDays = useMemo((): CalendarDay[] => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
     const firstDay = new Date(year, month, 1);
-    // const lastDay = new Date(year, month + 1, 0);
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - firstDay.getDay());
 
-    const days = [];
+    const days: CalendarDay[] = [];
     const currentDateObj = new Date(startDate);
 
     for (let i = 0; i < 42; i++) {
@@ -38,7 +38,7 @@ export const useCalendar = (moods) => {
     return days;
   }, [currentDate, moods]);
 
-  const navigateMonth = (direction) => {
+  const navigateMonth = (direction: number) => {
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + direction);
     setCurrentDate(newDate);

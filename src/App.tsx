@@ -5,18 +5,18 @@ import {
   Navigate,
   Outlet,
 } from "react-router-dom";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import { ToastProvider } from "./contexts/ToastContext";
-import LandingPage from "./components/LandingPage";
-import LoginPage from "./components/LoginPage";
-import RegisterPage from "./components/RegisterPage";
-import Dashboard from "./components/Dashboard";
-import MoodTracker from "./components/MoodTracker";
-import Analytics from "./components/Analytics";
-import Profile from "./components/Profile";
-import Navbar from "./components/Navbar";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { ToastProvider } from "@/contexts/ToastContext";
+import LandingPage from "@/components/LandingPage";
+import LoginPage from "@/components/LoginPage";
+import RegisterPage from "@/components/RegisterPage";
+import Dashboard from "@/components/Dashboard";
+import MoodTracker from "@/components/MoodTracker";
+import Analytics from "@/components/Analytics";
+import Profile from "@/components/Profile";
+import Navbar from "@/components/Navbar";
+import { LoadingPage } from "@/components/LoadingPage";
 import "./index.css";
-import { LoadingPage } from "./components/LoadingPage";
 
 function ProtectedLayout() {
   const { isAuthenticated, isLoading } = useAuth();

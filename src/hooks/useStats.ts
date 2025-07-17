@@ -1,6 +1,7 @@
 import { useMemo } from "react";
+import type { Mood, Stats } from "@/types";
 
-export const useStats = (moods) => {
+export const useStats = (moods: Mood[]): Stats => {
   return useMemo(() => {
     if (!moods || moods.length === 0) {
       return {
@@ -26,7 +27,7 @@ export const useStats = (moods) => {
     // Calculate streak (simplified - consecutive days with entries)
     const sortedMoods = [...moods].sort(
       (a, b) =>
-        new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt),
+        new Date(b.date || b.createdAt).getTime() - new Date(a.date || a.createdAt).getTime(),
     );
 
     let streak = 0;

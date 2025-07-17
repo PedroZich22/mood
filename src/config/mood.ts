@@ -1,4 +1,6 @@
-export const MOOD_CONFIG = {
+import type { MoodConfig, MoodRating } from "@/types";
+
+export const MOOD_CONFIG: MoodConfig = {
   emojis: {
     1: "😢",
     2: "😟",
@@ -40,13 +42,20 @@ export const MOOD_CONFIG = {
   },
 };
 
-export const getMoodEmoji = (rating) => MOOD_CONFIG.emojis[rating] || "";
-export const getMoodLabel = (rating) => MOOD_CONFIG.labels[rating] || "";
-export const getMoodDescription = (rating) =>
-  MOOD_CONFIG.descriptions[rating] || "";
-export const getMoodColor = (rating) => MOOD_CONFIG.colors[rating] || "";
-export const getMoodCalendarColor = (averageMood) => {
+export const getMoodEmoji = (rating: number): string => 
+  MOOD_CONFIG.emojis[rating as MoodRating] || "";
+
+export const getMoodLabel = (rating: number): string => 
+  MOOD_CONFIG.labels[rating as MoodRating] || "";
+
+export const getMoodDescription = (rating: number): string =>
+  MOOD_CONFIG.descriptions[rating as MoodRating] || "";
+
+export const getMoodColor = (rating: number): string => 
+  MOOD_CONFIG.colors[rating as MoodRating] || "";
+
+export const getMoodCalendarColor = (averageMood: number | null): string => {
   if (!averageMood || isNaN(averageMood)) return "bg-white";
-  const rating = Math.round(Number(averageMood));
-  return MOOD_CONFIG.calendarColors[rating];
+  const rating = Math.round(Number(averageMood)) as MoodRating;
+  return MOOD_CONFIG.calendarColors[rating] || "bg-white";
 };

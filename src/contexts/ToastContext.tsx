@@ -1,8 +1,15 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, ReactNode } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { handleApiError } from "../utils/errorHandler";
+import { handleApiError } from "@/utils/errorHandler";
+import type { ApiError } from "@/types";
 
-const ToastContext = createContext();
+interface ToastContextType {
+  showSuccess: (message: string) => void;
+  showError: (error: ApiError | Error | string) => void;
+  dismiss: (toastId?: string) => void;
+}
+
+const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export const useToast = () => {
   const context = useContext(ToastContext);
@@ -12,8 +19,12 @@ export const useToast = () => {
   return context;
 };
 
-export const ToastProvider = ({ children }) => {
-  const showSuccess = (message) => {
+interface ToastProviderProps {
+  children: ReactNode;
+}
+
+export const ToastProvider = ({ children }: ToastProviderProps) => {
+  const showSuccess = (message: string) => {
     toast.success(message, {
       duration: 3000,
       style: {
@@ -30,7 +41,7 @@ export const ToastProvider = ({ children }) => {
     });
   };
 
-  const showError = (error) => {
+  const showError = (error: ApiError | Error | string) => {
     const message = handleApiError(error);
     toast.error(message, {
       duration: 4000,
@@ -48,7 +59,7 @@ export const ToastProvider = ({ children }) => {
     });
   };
 
-  const dismiss = (toastId) => {
+  const dismiss = (toastId?: string) => {
     toast.dismiss(toastId);
   };
 
