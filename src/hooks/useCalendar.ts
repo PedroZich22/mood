@@ -1,41 +1,33 @@
 import { useState, useMemo } from "react";
+import { getCalendarMonth, getStartOfDay, formatDate } from "@/utils/date";
 import type { Mood, CalendarDay } from "@/types";
 
 export const useCalendar = (moods: Mood[]) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const calendarDays = useMemo((): CalendarDay[] => {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
+    const { days } = getCalendarMonth(currentDate);
+    const currentMonth = currentDate.getMonth();
 
-    const firstDay = new Date(year, month, 1);
-    const startDate = new Date(firstDay);
-    startDate.setDate(startDate.getDate() - firstDay.getDay());
-
-    const days: CalendarDay[] = [];
-    const currentDateObj = new Date(startDate);
-
-    for (let i = 0; i < 42; i++) {
+    return days.map((day) => {
       const dayMoods = moods.filter((mood) => {
         const moodDate = new Date(mood.date || mood.createdAt);
-        return moodDate.toDateString() === currentDateObj.toDateString();
+        const dayStart = getStartOfDay(day);
+        const moodStart = getStartOfDay(moodDate);
+        return dayStart.getTime() === moodStart.getTime();
       });
 
-      days.push({
-        date: new Date(currentDateObj),
-        isCurrentMonth: currentDateObj.getMonth() === month,
-        isToday: currentDateObj.toDateString() === new Date().toDateString(),
+      return {
+        date: day,
+        isCurrentMonth: day.getMonth() === currentMonth,
+        isToday: getStartOfDay(day).getTime() === getStartOfDay(new Date()).getTime(),
         moods: dayMoods,
         averageMood:
           dayMoods.length > 0
             ? dayMoods.reduce((sum, mood) => sum + Number(mood.rating), 0) / dayMoods.length
             : null,
-      });
-
-      currentDateObj.setDate(currentDateObj.getDate() + 1);
-    }
-
-    return days;
+      };
+    });
   }, [currentDate, moods]);
 
   const navigateMonth = (direction: number) => {
@@ -67,5 +59,6 @@ export const useCalendar = (moods: Mood[]) => {
     navigateMonth,
     monthNames,
     dayNames,
+    monthName: formatDate(currentDate, 'MMMM yyyy'),
   };
 };
